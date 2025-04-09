@@ -13,7 +13,6 @@ public class EnemyHealth : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
-        healthBar.UpdateHealthBar(maxHealth, currentHealth);
         enemyCounter = FindObjectOfType<EnemyCounter>();
     }
 
@@ -28,6 +27,12 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetHealthBar(maxHealth, currentHealth);
+    }
+
     private void Die()
     {
         if (deathEffect != null)
@@ -40,6 +45,6 @@ public class EnemyHealth : MonoBehaviour
             enemyCounter.CountKill();
         }
 
-        Destroy(gameObject);
+        GetComponent<Enemy>().ReturnToPool();
     }
 }

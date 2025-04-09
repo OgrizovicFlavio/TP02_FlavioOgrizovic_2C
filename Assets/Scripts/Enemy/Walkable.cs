@@ -5,7 +5,7 @@ public class Walkable : MonoBehaviour
     private const float ForcePower = 10f;
 
     [Header("Movement")]
-    [SerializeField] float speed = 5f;
+    [SerializeField] float speed = 10f;
     [SerializeField] float force = 2f;
 
     private Rigidbody rb;
