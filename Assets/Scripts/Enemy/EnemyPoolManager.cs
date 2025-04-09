@@ -10,7 +10,7 @@ public class EnemyPoolManager : MonoBehaviour
     [Header("Pool Settings")]
     [SerializeField] private int defaultCapacity = 10; //Cantidad inicial en la pool.
     [SerializeField] private int maxSize = 20; //Cantidad máxima en la pool.
-    [SerializeField] private bool collectionCheck = true; //Verifico duplicados.
+    [SerializeField] private bool collectionCheck = true; //Si es true, Unity revisa si ya tiene el objeto en el pool.
 
     private IObjectPool<Enemy>[] enemyPools; //Arreglo de pools, una por cada tipo de enemigo.
 
@@ -23,9 +23,9 @@ public class EnemyPoolManager : MonoBehaviour
             int index = i;
             enemyPools[i] = new ObjectPool<Enemy>(
                 () => CreateEnemy(enemyPrefabs[index], enemyPools[index]),
-                OnGetFromPool,
-                OnReleaseToPool,
-                OnDestroyPooledObject,
+                OnGetFromPool, //Se ejecuta cuando se pide un objeto de la pool.
+                OnReleaseToPool, //Se ejecuta cuando se devuelve un objeto.
+                OnDestroyPooledObject, //Se ejecuta cuando se destruye.
                 collectionCheck,
                 defaultCapacity,
                 maxSize

@@ -37,34 +37,34 @@ public class PlayerShoot : MonoBehaviour
 
     private void UpdateCrosshair()
     {
-        Ray ray = new Ray(firePoint.position, firePoint.forward);
+        Ray ray = new Ray(firePoint.position, firePoint.forward); //Rayo desde el firepoint hacia adelante.
 
         if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask))
         {
-            crosshairImage.color = highlightColor;
+            crosshairImage.color = highlightColor; //Si apunta a un objeto con Enemy mask, la mira se pone roja.
         }
         else
         {
-            crosshairImage.color = normalColor;
+            crosshairImage.color = normalColor; //Blanco por default.
         }
     }
 
     private void Shoot()
     {
-        Ray ray = new Ray(firePoint.position, firePoint.forward);
+        Ray ray = new Ray(firePoint.position, firePoint.forward); //Rayo del disparo.
 
         smokeEffect.Play();
 
         Vector3 endPoint = firePoint.position + firePoint.forward * range;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask)) 
         {
-            endPoint = hit.point;
+            endPoint = hit.point; //Si impacta, termina.
 
             EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                enemy.TakeDamage(damage); //Aplica daño
             }
 
             GameObject effect = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));

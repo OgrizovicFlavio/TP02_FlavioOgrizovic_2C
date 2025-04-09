@@ -45,6 +45,6 @@ public class EnemyHealth : MonoBehaviour
             enemyCounter.CountKill();
         }
 
-        GetComponent<Enemy>().ReturnToPool();
+        GetComponent<Enemy>().ReturnToPool(); //Vuelve a la pool.
     }
 }
