@@ -18,19 +18,19 @@ public class Walkable : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 desiredVelocity = direction * speed;
-        Vector3 deltaVelocity = desiredVelocity - rb.velocity;
+        Vector3 desiredVelocity = direction * speed; //Velocidad deseada en base a la dirección actual.
+        Vector3 deltaVelocity = desiredVelocity - rb.velocity; //Diferencia entre la velocidad deseada y la actual del rigidbody.
 
-        Vector3 moveForce = deltaVelocity * (force * ForcePower * Time.fixedDeltaTime);
-        rb.AddForce(moveForce);
+        Vector3 moveForce = deltaVelocity * (force * ForcePower * Time.fixedDeltaTime); //Fuerza proporcional a esa diferencia.
+        rb.AddForce(moveForce); //Aplico fuerza.
     }
 
-    public void MoveTo(Vector3 newDirection)
+    public void MoveTo(Vector3 newDirection) //Asigna una dirección al movimiento.
     {
         direction = newDirection;
     }
 
-    public void Stop()
+    public void Stop() //Detiene el movimiento.
     {
         MoveTo(Vector3.zero);
     }

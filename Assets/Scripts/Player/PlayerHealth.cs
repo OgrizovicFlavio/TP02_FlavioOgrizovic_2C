@@ -36,13 +36,15 @@ public class PlayerHealth : MonoBehaviour
         if (Utilities.CheckLayerInMask(enemyLayerMask, other.gameObject.layer))
         {
             Vector3 knockbackDir = (transform.position - other.transform.position).normalized;
-            LoseLife(knockbackDir);
+            TakeDamage(1, knockbackDir);
         }
     }
 
-    private void LoseLife(Vector3 knockbackDirection)
+    public void TakeDamage(int amount, Vector3 knockbackDirection)
     {
-        currentLives--;
+        if (isInvulnerable) return;
+
+        currentLives -= amount;
         Debug.Log("¡Vida perdida! Vidas restantes: " + currentLives);
         UpdateUI();
 
@@ -58,10 +60,12 @@ public class PlayerHealth : MonoBehaviour
         {
             pauseManager.GameOver();
         }
-        else
-        {
-            StartCoroutine(InvulnerabilityCoroutine());
-        }
+    }
+
+    public void TakeDamage(int amount)
+    {
+        Vector3 noKnockback = Vector3.zero;
+        TakeDamage(amount, noKnockback);
     }
 
     private IEnumerator InvulnerabilityCoroutine()
