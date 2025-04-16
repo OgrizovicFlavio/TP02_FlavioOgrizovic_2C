@@ -1,12 +1,18 @@
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class Enemy : MonoBehaviour
 {
-    public IObjectPool<Enemy> Pool { get; set; }
+    private EnemyPoolManager poolManager;
+    private int poolIndex;
+
+    public void SetPoolInfo(EnemyPoolManager manager, int index)
+    {
+        poolManager = manager;
+        poolIndex = index;
+    }
 
     public void ReturnToPool()
     {
-        Pool.Release(this);
+        poolManager.ReturnEnemyToPool(this, poolIndex);
     }
 }

@@ -21,12 +21,12 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        if (enemyPoolManager == null || spawnPoints.Length == 0) 
+        if (enemyPoolManager == null || spawnPoints.Length == 0)
             return;
 
         int index = Random.Range(0, spawnPoints.Length);
         Vector3 spawnPosition = spawnPoints[index].position;
 
-        enemyPoolManager.SpawnEnemy(spawnPosition); //El spawnear tira un enemigo en la escena.
+        enemyPoolManager.SpawnEnemy(spawnPosition);
     }
 }

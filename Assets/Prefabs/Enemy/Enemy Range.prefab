@@ -114,13 +114,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9096501519108492662}
-  - component: {fileID: 5296878397066937761}
-  - component: {fileID: 2246043899114576744}
   - component: {fileID: 8009480213898478361}
   - component: {fileID: 5472063471740116401}
-  - component: {fileID: 7608840529265718916}
+  - component: {fileID: -5086599769451403983}
   - component: {fileID: 3288106132554017611}
   - component: {fileID: 1682821904393834402}
+  - component: {fileID: 5296878397066937761}
+  - component: {fileID: 2246043899114576744}
   m_Layer: 6
   m_Name: Enemy Range
   m_TagString: Untagged
@@ -137,7 +137,7 @@ Transform:
   m_GameObject: {fileID: 1836387419965356892}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -10.9, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -146,54 +146,6 @@ Transform:
   - {fileID: 8157199541067362996}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!135 &5296878397066937761
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836387419965356892}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2246043899114576744
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1836387419965356892}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 1
 --- !u!114 &8009480213898478361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,13 +170,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36d62355bc001874db5d0274502a19e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 5947462682003983838, guid: f0e02656dd2a54f42a1335dfdd0e401b, type: 3}
+  bulletPrefab: {fileID: 4272729786693475829, guid: f0e02656dd2a54f42a1335dfdd0e401b, type: 3}
   firePoint: {fileID: 2320206821758389194}
-  smokeEffect: {fileID: 6267268284610262190, guid: bc7d99daa7275ad4e93722140230acb5, type: 3}
-  shootForce: 10
-  shootInterval: 2.5
+  smokeEffectPrefab: {fileID: 1567211856326019727, guid: bc7d99daa7275ad4e93722140230acb5, type: 3}
+  destroyableLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  fireRate: 2
   shootingRange: 50
---- !u!114 &7608840529265718916
+--- !u!114 &-5086599769451403983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,7 +191,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  healthBar: {fileID: 4939119829443972413}
+  enemyHealthBar: {fileID: 6888951353099460070}
   deathEffect: {fileID: 8650342275293541673, guid: 39ac221bafe4690409711a4818598b0e, type: 3}
 --- !u!114 &3288106132554017611
 MonoBehaviour:
@@ -267,6 +221,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   force: 10
+--- !u!135 &5296878397066937761
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836387419965356892}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2246043899114576744
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836387419965356892}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 1
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &3224085289492368010
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 3224085289492368010}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -460,7 +462,7 @@ GameObject:
   - component: {fileID: 4001229605499780673}
   - component: {fileID: 2629437226123947024}
   - component: {fileID: 4651658491145378214}
-  - component: {fileID: 4939119829443972413}
+  - component: {fileID: 6888951353099460070}
   m_Layer: 0
   m_Name: Health Bar Canvas
   m_TagString: Untagged
@@ -552,7 +554,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4939119829443972413
+--- !u!114 &6888951353099460070
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -561,7 +563,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7402731503622380115}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce8ede984b3e4484196eb08c7adcf5da, type: 3}
+  m_Script: {fileID: 11500000, guid: 44d2219e2b03f2748928c6b38e14e753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarSprite: {fileID: 6105323007540427009}

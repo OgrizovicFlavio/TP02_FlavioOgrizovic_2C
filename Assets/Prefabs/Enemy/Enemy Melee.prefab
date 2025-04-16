@@ -167,12 +167,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4644304705635987715}
-  - component: {fileID: 6218622778666514080}
-  - component: {fileID: 7865921293740636850}
   - component: {fileID: 5869596170693211358}
-  - component: {fileID: 8181336163073666435}
+  - component: {fileID: 9109095918927639028}
   - component: {fileID: 7742608089610379327}
   - component: {fileID: 3346795761756240251}
+  - component: {fileID: 6218622778666514080}
+  - component: {fileID: 7865921293740636850}
   m_Layer: 6
   m_Name: Enemy Melee
   m_TagString: Untagged
@@ -188,63 +188,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4171444149904533816}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 10, z: 10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7674292090728131445}
   - {fileID: 3686133554140729968}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!65 &6218622778666514080
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4171444149904533816}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &7865921293740636850
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4171444149904533816}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 1
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 112
-  m_CollisionDetection: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5869596170693211358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da9d789fb2fd30a4dbc419787f847114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8181336163073666435
+--- !u!114 &9109095918927639028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  healthBar: {fileID: 6334758910651227073}
+  enemyHealthBar: {fileID: 5908629054551122287}
   deathEffect: {fileID: 8650342275293541673, guid: 58d49089a0ae1254cade72c609beae96, type: 3}
 --- !u!114 &7742608089610379327
 MonoBehaviour:
@@ -300,6 +252,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   force: 10
+--- !u!65 &6218622778666514080
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4171444149904533816}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &7865921293740636850
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4171444149904533816}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 1
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &5847834868731621365
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,7 +312,7 @@ GameObject:
   - component: {fileID: 7892995457520274511}
   - component: {fileID: 3916387373920366200}
   - component: {fileID: 3466967086111449226}
-  - component: {fileID: 6334758910651227073}
+  - component: {fileID: 5908629054551122287}
   m_Layer: 0
   m_Name: Health Bar Canvas
   m_TagString: Untagged
@@ -404,7 +404,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6334758910651227073
+--- !u!114 &5908629054551122287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -413,7 +413,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5847834868731621365}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce8ede984b3e4484196eb08c7adcf5da, type: 3}
+  m_Script: {fileID: 11500000, guid: 44d2219e2b03f2748928c6b38e14e753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarSprite: {fileID: 8668955324488686488}

@@ -3,8 +3,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private HealthBar healthBar;
-
+    [SerializeField] private EnemyHealthBar enemyHealthBar;
     [SerializeField] private GameObject deathEffect;
 
     private EnemyCounter enemyCounter;
@@ -19,7 +18,7 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage (float amount)
     {
         currentHealth -= amount;
-        healthBar.UpdateHealthBar(maxHealth, currentHealth);
+        enemyHealthBar.UpdateHealthBar(maxHealth, currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -30,7 +29,7 @@ public class EnemyHealth : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
-        healthBar.SetHealthBar(maxHealth, currentHealth);
+        enemyHealthBar.SetHealthBar(maxHealth, currentHealth);
     }
 
     private void Die()

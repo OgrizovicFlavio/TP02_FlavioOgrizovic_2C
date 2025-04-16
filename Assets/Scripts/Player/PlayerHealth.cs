@@ -6,8 +6,7 @@ public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private int maxLives = 3;
     [SerializeField] private float invulnerabilityTime = 1f;
-    [SerializeField] private float knockbackForce = 5f;
-
+    [SerializeField] private float knockbackForce = 10f;
 
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private Renderer playerRenderer;
@@ -31,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
         UpdateUI();
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (Utilities.CheckLayerInMask(enemyLayerMask, other.gameObject.layer))
         {

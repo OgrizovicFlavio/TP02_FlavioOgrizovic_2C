@@ -1,23 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField] private float range = 100f;
-    [SerializeField] private float damage = 25f;
     [SerializeField] private Camera cam;
-    [SerializeField] private LayerMask destroyableLayerMask;
-
-    [SerializeField] private Image crosshairImage;
-    [SerializeField] private Color normalColor = Color.white;
-    [SerializeField] private Color highlightColor = Color.red;
-
+    [SerializeField] private LayerMask destroyableLayer;
+    [SerializeField] private PlayerBullet bulletPrefab;
+    [SerializeField] private GameObject smokeEffectPrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject laserPrefab;
-    [SerializeField] private float laserDuration = 1f;
-    [SerializeField] private ParticleSystem smokeEffect;
-    [SerializeField] private GameObject impactEffect;
+    [SerializeField] private float fireRate = 0.5f;
+    [SerializeField] private float shootingRange = 100f;
+
+    private float nextFireTime = 0f;
 
     private void Awake()
     {
@@ -25,66 +18,35 @@ public class PlayerShoot : MonoBehaviour
             cam = Camera.main;
     }
 
-    void Update()
+    private void Update()
     {
-        UpdateCrosshair();
-
-        if (Input.GetButtonDown("Fire1")) // CLICK IZQUIERDO
+        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime)
         {
+            nextFireTime = Time.time + fireRate;
             Shoot();
-        }
-    }
-
-    private void UpdateCrosshair()
-    {
-        Ray ray = new Ray(firePoint.position, firePoint.forward); //Rayo desde el firepoint hacia adelante.
-
-        if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask))
-        {
-            crosshairImage.color = highlightColor; //Si apunta a un objeto con Enemy mask, la mira se pone roja.
-        }
-        else
-        {
-            crosshairImage.color = normalColor; //Blanco por default.
         }
     }
 
     private void Shoot()
     {
-        Ray ray = new Ray(firePoint.position, firePoint.forward); //Rayo del disparo.
+        Ray ray = new Ray(firePoint.position, firePoint.forward);
 
-        smokeEffect.Play();
-
-        Vector3 endPoint = firePoint.position + firePoint.forward * range;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask)) 
+        if (Physics.Raycast(ray, out RaycastHit hit, shootingRange, destroyableLayer))
         {
-            endPoint = hit.point; //Si impacta, termina.
 
-            EnemyHealth enemy = hit.transform.GetComponentInParent<EnemyHealth>();
-            if (enemy != null)
+            PlayerBullet bullet = Instantiate(bulletPrefab);
+            bullet.transform.position = firePoint.position;
+            bullet.Set(hit.transform);
+
+            if (smokeEffectPrefab != null)
             {
-                enemy.TakeDamage(damage); //Aplica daño
+                Instantiate(smokeEffectPrefab, firePoint.position, firePoint.rotation);
             }
-
-            GameObject effect = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            Destroy(effect, 2f);
         }
-
-        StartCoroutine(ShowLaser(firePoint.position, endPoint));
     }
 
-    private IEnumerator ShowLaser(Vector3 start, Vector3 end)
+    public void SetCamera(Camera newCam)
     {
-        GameObject laser = Instantiate(laserPrefab);
-        LineRenderer lineRenderer = laser.GetComponent<LineRenderer>();
-
-        lineRenderer.startWidth = 0.5f;
-        lineRenderer.endWidth = 0.5f;
-        lineRenderer.SetPosition(0, start);
-        lineRenderer.SetPosition(1, end);
-
-        yield return new WaitForSeconds(laserDuration);
-        Destroy(laser);
+        cam = newCam;
     }
 }

@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class EnemyPoolManager : MonoBehaviour
 {
@@ -8,98 +8,85 @@ public class EnemyPoolManager : MonoBehaviour
     [SerializeField] private Transform playerTarget;
 
     [Header("Pool Settings")]
-    [SerializeField] private int defaultCapacity = 10; //Cantidad inicial en la pool.
-    [SerializeField] private int maxSize = 20; //Cantidad máxima en la pool.
-    [SerializeField] private bool collectionCheck = true; //Si es true, Unity revisa si ya tiene el objeto en el pool.
+    [SerializeField] private int defaultCapacity = 10;
+    [SerializeField] private int maxSize = 20;
 
-    private IObjectPool<Enemy>[] enemyPools; //Arreglo de pools, una por cada tipo de enemigo.
+    private List<Enemy>[] enemyPools;
 
     private void Awake()
     {
-        enemyPools = new IObjectPool<Enemy>[enemyPrefabs.Length];
+        enemyPools = new List<Enemy>[enemyPrefabs.Length];
 
         for (int i = 0; i < enemyPrefabs.Length; i++)
         {
-            int index = i;
-            enemyPools[i] = new ObjectPool<Enemy>(
-                () => CreateEnemy(enemyPrefabs[index], enemyPools[index]),
-                OnGetFromPool, //Se ejecuta cuando se pide un objeto de la pool.
-                OnReleaseToPool, //Se ejecuta cuando se devuelve un objeto.
-                OnDestroyPooledObject, //Se ejecuta cuando se destruye.
-                collectionCheck,
-                defaultCapacity,
-                maxSize
-            );
+            enemyPools[i] = new List<Enemy>();
+
+            for (int j = 0; j < defaultCapacity; j++)
+            {
+                Enemy enemy = Instantiate(enemyPrefabs[i]);
+                enemy.SetPoolInfo(this, i);
+                enemy.gameObject.SetActive(false);
+                SetupEnemy(enemy);
+                enemyPools[i].Add(enemy);
+            }
         }
     }
 
-    private Enemy CreateEnemy(Enemy prefab, IObjectPool<Enemy> pool) //Crea un enemigo nuevo, le asigna la pool y configura su target.
+    private void SetupEnemy(Enemy enemy)
     {
-        Enemy enemy = Instantiate(prefab);
-        enemy.Pool = pool;
-
-        //Si tiene script de movimiento, asigno el target.
-        EnemyController controller = enemy.GetComponent<EnemyController>();
-        if (controller != null && playerTarget != null)
-        {
-            controller.SetTarget(playerTarget);
-        }
-
-        //Si tiene script de disparo, asigno el target.
-        EnemyShoot shooter = enemy.GetComponent<EnemyShoot>();
-        if (shooter != null && playerTarget != null)
-        {
-            shooter.SetTarget(playerTarget);
-        }
-
-        return enemy;
-    }
-
-    private void OnGetFromPool(Enemy enemy) // Cuando el enemigo es reutilizado desde la pool.
-    {
-        enemy.gameObject.SetActive(true); // Lo activo.
-
-        // Reinicio su vida.
-        var health = enemy.GetComponent<EnemyHealth>(); 
-        if (health != null)
-        {
-            health.ResetHealth();
-        }
-
         var controller = enemy.GetComponent<EnemyController>();
         if (controller != null && playerTarget != null)
-        {
             controller.SetTarget(playerTarget);
-        }
 
         var shooter = enemy.GetComponent<EnemyShoot>();
         if (shooter != null && playerTarget != null)
-        {
             shooter.SetTarget(playerTarget);
+
+        var healthBar = enemy.GetComponentInChildren<EnemyHealthBar>();
+        if (healthBar != null && Camera.main != null)
+            healthBar.SetCamera(Camera.main);
+    }
+
+    public void SpawnEnemy(Vector3 position)
+    {
+        int poolIndex = Random.Range(0, enemyPrefabs.Length);
+        Enemy enemy = GetEnemyFromPool(poolIndex);
+
+        enemy.transform.position = position;
+        enemy.gameObject.SetActive(true);
+
+        var health = enemy.GetComponent<EnemyHealth>();
+        if (health != null)
+            health.ResetHealth();
+    }
+
+    private Enemy GetEnemyFromPool(int poolIndex)
+    {
+        foreach (var enemy in enemyPools[poolIndex])
+        {
+            if (!enemy.gameObject.activeInHierarchy)
+                return enemy;
         }
+
+        if (enemyPools[poolIndex].Count < maxSize)
+        {
+            Enemy newEnemy = Instantiate(enemyPrefabs[poolIndex]);
+            newEnemy.SetPoolInfo(this, poolIndex);
+            SetupEnemy(newEnemy);
+            newEnemy.gameObject.SetActive(false);
+            enemyPools[poolIndex].Add(newEnemy);
+            return newEnemy;
+        }
+
+        Debug.LogWarning("Límite de enemigos alcanzado.");
+        return null;
     }
 
-    private void OnReleaseToPool(Enemy enemy) //Devuelto a la pool.
+    public void ReturnEnemyToPool(Enemy enemy, int poolIndex)
     {
-        enemy.gameObject.SetActive(false);
-    }
-
-    private void OnDestroyPooledObject(Enemy enemy) //Se destruye definitivamente.
-    {
-        Destroy(enemy.gameObject);
-    }
-
-    public void SpawnEnemy(Vector3 position) //Método uqe usa EnemySpawner para pedir enemigos de la pool.
-    {
-        if (enemyPools.Length == 0) return;
-
-        int randomIndex = Random.Range(0, enemyPools.Length); //Elige el tipo de enemigo.
-        Enemy enemy = enemyPools[randomIndex].Get(); //Lo pide a la pool correspondiente.
-        enemy.transform.position = position; //Lo posiciona en la escena.
-    }
-
-    public void ReturnEnemyToPool(Enemy enemy) //Método que se llama cuando el enemigo "muere" y quiere volver a la pool.
-    {
-        enemy.Pool?.Release(enemy);
+        if (poolIndex >= 0 && poolIndex < enemyPools.Length)
+        {
+            enemy.gameObject.SetActive(false);
+        }
     }
 }

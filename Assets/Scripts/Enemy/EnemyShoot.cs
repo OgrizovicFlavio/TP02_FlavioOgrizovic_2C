@@ -2,43 +2,51 @@ using UnityEngine;
 
 public class EnemyShoot : MonoBehaviour
 {
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private EnemyBullet bulletPrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private float shootForce = 10f;
-    [SerializeField] private float shootInterval = 2.5f;
+    [SerializeField] private GameObject smokeEffectPrefab;
+    [SerializeField] private LayerMask destroyableLayer;
+    [SerializeField] private float fireRate = 2f;
     [SerializeField] private float shootingRange = 50f;
 
-    private float shootTimer;
+    private float nextFireTime = 0f;
     private Transform player;
 
     private void Update()
     {
         if (player == null)
-            return;
-
-        shootTimer += Time.deltaTime;
-
-        float distance = Vector3.Distance(transform.position, player.position); //Calculo distancia al jugador.
-        if (distance <= shootingRange && shootTimer >= shootInterval)
         {
+            return;
+        }
+
+        float distance = Vector3.Distance(transform.position, player.position);
+        if (distance <= shootingRange && Time.time >= nextFireTime)
+        {
+            nextFireTime = Time.time + fireRate;
             Shoot();
-            shootTimer = 0f;
         }
     }
 
     private void Shoot()
     {
-        Vector3 dir = (player.position - firePoint.position).normalized; //Calculo dirección desde el punto de disparo hacia el jugador.
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(dir)); //Instancio apuntado a esa dirección.
+        Debug.Log("Enemy is shooting at: " + player.name);
 
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        if (rb != null)
+        Ray ray = new Ray(firePoint.position, firePoint.forward);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, shootingRange, destroyableLayer))
         {
-            rb.velocity = dir * shootForce; //Aplico velocidad al rigidbody de la bala en la dirección calculada.
+            EnemyBullet bullet = Instantiate(bulletPrefab);
+            bullet.transform.position = firePoint.position;
+            bullet.Set(hit.transform);
+
+            if (smokeEffectPrefab != null)
+            {
+                Instantiate(smokeEffectPrefab, firePoint.position, firePoint.rotation);
+            }
         }
     }
 
-    public void SetTarget(Transform target) //Método para llamar desde otro script para asignarle al jugador como objetivo.
+    public void SetTarget(Transform target)
     {
         player = target;
     }

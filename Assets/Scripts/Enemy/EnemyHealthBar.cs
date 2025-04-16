@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+public class EnemyHealthBar : MonoBehaviour
 {
     [SerializeField] private Image healthBarSprite;
     [SerializeField] private float reduceSpeed = 2.0f;
@@ -9,14 +9,13 @@ public class HealthBar : MonoBehaviour
     private float target = 1;
     private Camera cam;
 
-    private void Start()
-    {
-        cam = Camera.main;
-    }
-
     private void Update()
     {
-        transform.rotation = cam.transform.rotation;
+        if (cam != null)
+        {
+            transform.rotation = cam.transform.rotation;
+        }
+
         healthBarSprite.fillAmount = Mathf.MoveTowards(healthBarSprite.fillAmount, target, reduceSpeed * Time.deltaTime);
     }
 
@@ -29,5 +28,10 @@ public class HealthBar : MonoBehaviour
     {
         target = currentHealth / maxHealth;
         healthBarSprite.fillAmount = target;
+    }
+
+    public void SetCamera(Camera newCamera)
+    {
+        cam = newCamera;
     }
 }

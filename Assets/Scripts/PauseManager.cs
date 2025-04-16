@@ -37,7 +37,8 @@ public class PauseManager : MonoBehaviour
     {
         foreach (var comp in componentsToDisable)
         {
-            comp.enabled = false;
+            if (comp != null)
+                comp.enabled = false;
         }
 
         if (crosshair != null)
@@ -64,7 +65,8 @@ public class PauseManager : MonoBehaviour
 
         foreach (var component in componentsToDisable)
         {
-            component.enabled = true;
+            if (component != null)
+                component.enabled = true;
         }
 
         if (crosshair != null)
