@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody rb;
+    [Header("Movement")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float maxSpeed = 10f;
 
-    private float xMin = -48f;
-    private float xMax = 48f;
-    private float zMin = -48f;
-    private float zMax = 48f;
-    private float yMin = 0f;
-    private float yMax = 25f;
+    [Header("Constraints")]
+    [SerializeField] private float xMin = -49f;
+    [SerializeField] private float xMax = 49f;
+    [SerializeField] private float zMin = -49f;
+    [SerializeField] private float zMax = 49f;
+    [SerializeField] private float yMin = 0f;
+    [SerializeField] private float yMax = 60f;
+
+    private Rigidbody rb;
 
     private void Awake()
     {
