@@ -1,18 +1,19 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour, IReusable
 {
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private EnemyHealthBar enemyHealthBar;
     [SerializeField] private GameObject deathEffect;
 
-    private EnemyCounter enemyCounter;
+    private ScoreManager scoreManager;
     private float currentHealth;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        enemyCounter = FindObjectOfType<EnemyCounter>();
+        scoreManager = FindObjectOfType<ScoreManager>();
     }
 
     public void TakeDamage (float amount)
@@ -39,11 +40,19 @@ public class EnemyHealth : MonoBehaviour
             Instantiate(deathEffect, transform.position, Quaternion.identity);
         }
 
-        if (enemyCounter != null)
+        if(scoreManager != null)
         {
-            enemyCounter.CountKill();
+            scoreManager.AddScore(10);
         }
 
-        GetComponent<Enemy>().ReturnToPool(); //Vuelve a la pool.
+        GetComponent<Enemy>().ReturnToPool();
     }
+
+    public void OnSpawn()
+    {
+        currentHealth = maxHealth;
+        enemyHealthBar.SetHealthBar(maxHealth, currentHealth);
+    }
+
+    public void OnReturn() { }
 }

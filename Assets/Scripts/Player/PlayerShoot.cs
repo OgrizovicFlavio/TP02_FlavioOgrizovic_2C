@@ -5,10 +5,8 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask destroyableLayer;
     [SerializeField] private PlayerBullet bulletPrefab;
-    [SerializeField] private GameObject smokeEffectPrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 0.5f;
-    [SerializeField] private float shootingRange = 100f;
+    [SerializeField] private float fireRate = 1f;
 
     private float nextFireTime = 0f;
 
@@ -29,19 +27,18 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot()
     {
-        Ray ray = new Ray(firePoint.position, firePoint.forward);
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // centro de la pantalla
+        Vector3 direction = ray.direction;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, shootingRange, destroyableLayer))
+        GameObject bulletGO = PoolController.Instance.GetObjectFromPool(ObjectType.PlayerBullet);
+        bulletGO.transform.position = firePoint.position;
+        bulletGO.transform.rotation = Quaternion.LookRotation(direction);
+        bulletGO.SetActive(true);
+
+        PlayerBullet bullet = bulletGO.GetComponent<PlayerBullet>();
+        if (bullet != null)
         {
-
-            PlayerBullet bullet = Instantiate(bulletPrefab);
-            bullet.transform.position = firePoint.position;
-            bullet.Set(hit.transform);
-
-            if (smokeEffectPrefab != null)
-            {
-                Instantiate(smokeEffectPrefab, firePoint.position, firePoint.rotation);
-            }
+            bullet.SetDirection(direction);
         }
     }
 

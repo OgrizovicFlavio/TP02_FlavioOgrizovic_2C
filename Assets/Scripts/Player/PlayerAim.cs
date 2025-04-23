@@ -56,7 +56,7 @@ public class PlayerAim : MonoBehaviour
 
     private void HandleLaserToggle()
     {
-        if (Input.GetKeyDown(KeyCode.L))
+        if (Input.GetMouseButtonDown(1))
         {
             laserEnabled = !laserEnabled;
             laserInstance.SetActive(laserEnabled);

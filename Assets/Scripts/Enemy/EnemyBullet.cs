@@ -2,22 +2,20 @@ using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
-    [SerializeField] private float speed = 20f;
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float lifeTime = 4f;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float damage = 1f;
+    [SerializeField] private float lifeTime = 3f;
+    [SerializeField] private float collisionDelay = 0.05f;
     [SerializeField] private LayerMask playerLayer;
 
     private Rigidbody rb;
     private Vector3 direction;
+    private float timer;
+    private float spawnTime;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        Destroy(gameObject, lifeTime);
     }
 
     private void FixedUpdate()
@@ -25,9 +23,20 @@ public class EnemyBullet : MonoBehaviour
         rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
     }
 
+    private void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer >= lifeTime)
+        {
+            PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.EnemyBullet);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Enemy bullet hit: " + other.gameObject.name);
+        if (Time.time - spawnTime < collisionDelay)
+            return;
+
         if (Utilities.CheckLayerInMask(playerLayer, other.gameObject.layer))
         {
             PlayerHealth player = other.GetComponent<PlayerHealth>();
@@ -36,17 +45,21 @@ public class EnemyBullet : MonoBehaviour
                 Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
                 player.TakeDamage((int)damage, knockbackDir);
             }
+        }
 
-            Destroy(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.EnemyBullet);
     }
 
-    public void Set(Transform target)
+    public void SetDirection(Vector3 dir)
     {
-        direction = (target.position - transform.position).normalized;
+        direction = dir.normalized;
     }
+
+    public void OnSpawn()
+    {
+        timer = 0f;
+        spawnTime = Time.time;
+    }
+
+    public void OnReturn() { }
 }

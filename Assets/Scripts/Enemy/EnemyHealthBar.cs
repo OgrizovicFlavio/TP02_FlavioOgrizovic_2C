@@ -9,11 +9,20 @@ public class EnemyHealthBar : MonoBehaviour
     private float target = 1;
     private Camera cam;
 
+    private void Start()
+    {
+        if (cam == null)
+        {
+            cam = Camera.main;
+        }
+    }
+
     private void Update()
     {
         if (cam != null)
         {
-            transform.rotation = cam.transform.rotation;
+            Vector3 dir = transform.position - cam.transform.position;
+            transform.rotation = Quaternion.LookRotation(dir);
         }
 
         healthBarSprite.fillAmount = Mathf.MoveTowards(healthBarSprite.fillAmount, target, reduceSpeed * Time.deltaTime);

@@ -3,16 +3,26 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float speed = 10f;
-    [SerializeField] private float maxSpeed = 10f;
+    [SerializeField] private float speed = 20f;
+    [SerializeField] private float maxSpeed = 20f;
+
+    [Header("Hover Settings")]
+    [SerializeField] private float hoverMinHeight = 1.5f;
+    [SerializeField] private float hoverForce = 10f;
 
     [Header("Constraints")]
-    [SerializeField] private float xMin = -49f;
-    [SerializeField] private float xMax = 49f;
-    [SerializeField] private float zMin = -49f;
-    [SerializeField] private float zMax = 49f;
+    [SerializeField] private float xMin = -150f;
+    [SerializeField] private float xMax = 150f;
+    [SerializeField] private float zMin = -75f;
+    [SerializeField] private float zMax = 75f;
     [SerializeField] private float yMin = 0f;
-    [SerializeField] private float yMax = 60f;
+    [SerializeField] private float yMax = 50f;
+
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
+    [Header("Effects")]
+    [SerializeField] private ParticleSystem[] thrusters;
 
     private Rigidbody rb;
 
@@ -24,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        HoverIfTooLow();
     }
 
     private void LateUpdate()
@@ -40,6 +51,21 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         float z = Input.GetAxis("Vertical");
+
+        bool isThrusting = z > 0.1f;
+
+        foreach (var thrust in thrusters)
+        {
+            if (isThrusting && !thrust.isPlaying)
+            {
+                thrust.Play();
+            }
+            else if (!isThrusting && thrust.isPlaying)
+            {
+                thrust.Stop();
+            }
+        }
+
         float y = 0;
         float x = Input.GetAxis("Horizontal");
 
@@ -62,14 +88,40 @@ public class PlayerMovement : MonoBehaviour
         right.Normalize();
 
         Vector3 direction = (forward * z + right * x + Vector3.up * y).normalized;
-        
-        rb.AddForce(direction * speed, ForceMode.Acceleration);
+
+        if (direction != Vector3.zero)
+        {
+            rb.AddForce(direction * speed, ForceMode.Acceleration);
+        }
+        else
+        {
+            rb.velocity *= 0.95f;
+        }
 
         Vector3 velocity = rb.velocity;
 
         if (rb.velocity.magnitude > maxSpeed)
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
+
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
+
+        if (animator != null)
+        {
+            float inputX = Input.GetAxis("Horizontal");
+            float inputZ = Input.GetAxis("Vertical");
+
+            animator.SetFloat("Horizontal", inputX);
+            animator.SetFloat("Vertical", inputZ);
+        }
+    }
+
+    private void HoverIfTooLow()
+    {
+        if (rb.position.y < hoverMinHeight)
+        {
+            rb.AddForce(Vector3.up * hoverForce, ForceMode.Acceleration);
         }
     }
 }

@@ -3,10 +3,14 @@ using UnityEngine.UI;
 
 public class PlayerRotation : MonoBehaviour
 {
+    [Header("Sensivity Settings")]
     [SerializeField] private float verticalSensitivity = 2f;
     [SerializeField] private float horizontalSensitivity = 2f;
     [SerializeField] private float minVerticalAngle = -80f;
     [SerializeField] private float maxVerticalAngle = 80f;
+
+    [Header("Player Body")]
+    [SerializeField] private Transform playerBody;
 
     [Header("Cameras")]
     [SerializeField] private Transform firstPersonCam;
@@ -33,7 +37,7 @@ public class PlayerRotation : MonoBehaviour
 
     private void Update()
     {
-        Rotate();
+        HandleRotation();
 
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -58,12 +62,13 @@ public class PlayerRotation : MonoBehaviour
         }
     }
 
-    private void Rotate()
+    private void HandleRotation()
     {
         float mouseX = Input.GetAxis("Mouse X") * horizontalSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * verticalSensitivity;
 
-        transform.Rotate(Vector3.up * mouseX); // rota el jugador (horizontal)
+        if (playerBody != null)
+            playerBody.Rotate(Vector3.up * mouseX); // rota el jugador (horizontal)
 
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, minVerticalAngle, maxVerticalAngle);

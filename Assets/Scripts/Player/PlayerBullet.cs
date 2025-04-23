@@ -9,10 +9,19 @@ public class PlayerBullet : MonoBehaviour
     private Transform target;
     private Rigidbody rb;
     private Vector3 direction;
+    private float collisionDelay = 0.05f;
+    private float spawnTime;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+    }
+
+    private void OnEnable()
+    {
+        spawnTime = Time.time;
+        direction = Vector3.zero;
+        rb.Sleep();
     }
 
     private void FixedUpdate()
@@ -22,25 +31,29 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (Utilities.CheckLayerInMask(enemyLayer, other.gameObject.layer))
+        if (Time.time - spawnTime < collisionDelay)
+            return;
+
+        NPCController npc = other.GetComponent<NPCController>();
+        if (npc != null)
         {
-            EnemyHealth enemy = other.gameObject.GetComponent<EnemyHealth>();
+            npc.Die();
+        }
+        else if (Utilities.CheckLayerInMask(enemyLayer, other.gameObject.layer))
+        {
+            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
             }
+        }
 
-            Destroy(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.PlayerBullet);
     }
 
-    public void Set(Transform target)
+    public void SetDirection(Vector3 dir)
     {
-        direction = (target.position - transform.position).normalized;
+        direction = dir.normalized;
     }
 }
 

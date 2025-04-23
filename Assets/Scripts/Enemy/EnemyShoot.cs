@@ -1,25 +1,23 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EnemyShoot : MonoBehaviour
 {
-    [SerializeField] private EnemyBullet bulletPrefab;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private GameObject smokeEffectPrefab;
-    [SerializeField] private LayerMask destroyableLayer;
     [SerializeField] private float fireRate = 2f;
     [SerializeField] private float shootingRange = 50f;
+    [SerializeField] private ObjectType bulletType = ObjectType.EnemyBullet;
 
     private float nextFireTime = 0f;
     private Transform player;
 
     private void Update()
     {
-        if (player == null)
-        {
+        if (player == null) 
             return;
-        }
 
         float distance = Vector3.Distance(transform.position, player.position);
+
         if (distance <= shootingRange && Time.time >= nextFireTime)
         {
             nextFireTime = Time.time + fireRate;
@@ -29,20 +27,17 @@ public class EnemyShoot : MonoBehaviour
 
     private void Shoot()
     {
-        Debug.Log("Enemy is shooting at: " + player.name);
+        Vector3 shootDirection = (player.position - firePoint.position).normalized;
 
-        Ray ray = new Ray(firePoint.position, firePoint.forward);
+        GameObject bulletGO = PoolController.Instance.GetObjectFromPool(bulletType);
+        bulletGO.transform.position = firePoint.position;
+        bulletGO.transform.rotation = Quaternion.LookRotation(shootDirection);
+        bulletGO.SetActive(true);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, shootingRange, destroyableLayer))
+        EnemyBullet bullet = bulletGO.GetComponent<EnemyBullet>();
+        if (bullet != null)
         {
-            EnemyBullet bullet = Instantiate(bulletPrefab);
-            bullet.transform.position = firePoint.position;
-            bullet.Set(hit.transform);
-
-            if (smokeEffectPrefab != null)
-            {
-                Instantiate(smokeEffectPrefab, firePoint.position, firePoint.rotation);
-            }
+            bullet.SetDirection(shootDirection);
         }
     }
 
