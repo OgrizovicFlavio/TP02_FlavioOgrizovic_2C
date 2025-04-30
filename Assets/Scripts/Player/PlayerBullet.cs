@@ -1,59 +1,40 @@
 using UnityEngine;
 
-public class PlayerBullet : MonoBehaviour
+public class PlayerBullet : Bullet
 {
-    [SerializeField] private float speed = 30f;
-    [SerializeField] private float damage = 25f;
+    [Header("Configuration")]
+    [SerializeField] private PlayerBulletStats stats;
     [SerializeField] private LayerMask enemyLayer;
 
-    private Transform target;
-    private Rigidbody rb;
-    private Vector3 direction;
-    private float collisionDelay = 0.05f;
-    private float spawnTime;
+    protected override float GetSpeed() => stats.speed;
+    protected override float GetCollisionDelay() => 0.05f;
 
-    private void Awake()
+    protected override void HandleCollision(Collider other)
     {
-        rb = GetComponent<Rigidbody>();
-    }
-
-    private void OnEnable()
-    {
-        spawnTime = Time.time;
-        direction = Vector3.zero;
-        rb.Sleep();
-    }
-
-    private void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (Time.time - spawnTime < collisionDelay)
-            return;
-
-        NPCController npc = other.GetComponent<NPCController>();
-        if (npc != null)
+        ImpactEffect impactEffect = PoolManager.Instance.Get<ImpactEffect>();
+        if (impactEffect != null)
         {
-            npc.Die();
-        }
-        else if (Utilities.CheckLayerInMask(enemyLayer, other.gameObject.layer))
-        {
-            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(damage);
-            }
+            impactEffect.transform.position = transform.position;
+            impactEffect.transform.rotation = Quaternion.identity;
         }
 
-        PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.PlayerBullet);
+        IDamageable target = other.GetComponent<IDamageable>();
+        if (target != null)
+        {
+            target.TakeDamage(stats.damage);
+        }
     }
 
-    public void SetDirection(Vector3 dir)
+    public override void OnReturnToPool() {}
+
+    public override void Disable()
     {
-        direction = dir.normalized;
+        base.Disable();
+    }
+
+    public override void ResetToDefault()
+    {
+        base.ResetToDefault();
     }
 }
 

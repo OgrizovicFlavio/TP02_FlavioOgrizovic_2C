@@ -9989,7 +9989,7 @@ GameObject:
   - component: {fileID: 5129752090042795613}
   - component: {fileID: 2427190049925287046}
   m_Layer: 8
-  m_Name: Player Dron
+  m_Name: Player Drone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10026,13 +10026,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1066cfd2be312f34e94e1b31e69170e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
   cam: {fileID: 5790521539062975143}
   destroyableLayer:
     serializedVersion: 2
     m_Bits: 64
   bulletPrefab: {fileID: 7322963333505801371, guid: ab81a0027c95de4479091624535dddfe, type: 3}
   firePoint: {fileID: 7393730516753146386}
-  fireRate: 0.25
 --- !u!114 &5091083366256704756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10045,13 +10045,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c1a03d845108b4c80b6a9246cb5eaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
   cam: {fileID: 5790521539062975143}
   firePoint: {fileID: 7393730516753146386}
   destroyableLayerMask:
     serializedVersion: 2
     m_Bits: 64
   laserSightPrefab: {fileID: 2753244154695426267, guid: a55e3514244ba014fa2f7a72e0772e39, type: 3}
-  range: 100
   crosshairImage: {fileID: 0}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   highlightColor: {r: 1, g: 0, b: 0, a: 1}
@@ -10067,10 +10067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb48dcee42faba442a75cea98822a457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  verticalSensitivity: 2
-  horizontalSensitivity: 2
-  minVerticalAngle: -45
-  maxVerticalAngle: 45
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
   playerBody: {fileID: 6756596616131009275}
   firstPersonCam: {fileID: 4973013521145156574}
   thirdPersonCam: {fileID: 6082145202108819863}
@@ -10086,16 +10083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8956b32f79469794a8db363ff9851ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  maxSpeed: 20
-  hoverMinHeight: 1.5
-  hoverForce: 10
-  xMin: -150
-  xMax: 150
-  zMin: -75
-  zMax: 75
-  yMin: 0
-  yMax: 50
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
   animator: {fileID: 6094449617475348099}
   thrusters:
   - {fileID: 3145851746244761906}
@@ -10112,9 +10100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dc19606b2e958d4eb3b67e90fd4d73c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLives: 3
-  invulnerabilityTime: 1
-  knockbackForce: 20
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
   livesText: {fileID: 0}
   playerRenderer: {fileID: 5591998828885006231}
   enemyLayerMask:

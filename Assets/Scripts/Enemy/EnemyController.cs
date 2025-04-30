@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemyController : MonoBehaviour, IReusable
+public class EnemyController : MonoBehaviour
 {
+    [Header("Stats")]
+    [SerializeField] private EnemyStats stats;
     [SerializeField] private Walkable walkable;
     [SerializeField] private Transform visualModel;
-    [SerializeField] private float stoppingDistance = 1.5f;
-    [SerializeField] private float rotationSpeed = 5f;
 
     private Transform target;
 
@@ -25,10 +25,10 @@ public class EnemyController : MonoBehaviour, IReusable
         if (visualModel != null)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            visualModel.rotation = Quaternion.Slerp(visualModel.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            visualModel.rotation = Quaternion.Slerp(visualModel.rotation, targetRotation, stats.rotationSpeed * Time.deltaTime);
         }
 
-        if (direction.magnitude > stoppingDistance) //Si está más lejos que la distancia de parada, sigue moviéndose.
+        if (direction.magnitude > stats.stoppingDistance) //Si está más lejos que la distancia de parada, sigue moviéndose.
         {
             walkable.MoveTo(direction.normalized); //Mueve al enemigo en la dirección normalizada.
         }
@@ -43,6 +43,15 @@ public class EnemyController : MonoBehaviour, IReusable
         target = newTarget;
     }
 
+    public void ResetTarget()
+    {
+        StopAllCoroutines();
+        SetTarget(null);
+        walkable.Stop();
+
+        StartCoroutine(WaitForTarget());
+    }
+
     private IEnumerator WaitForTarget()
     {
         // Espera hasta que el PlayerLocator tenga una referencia válida
@@ -54,16 +63,5 @@ public class EnemyController : MonoBehaviour, IReusable
         EnemyShoot shooter = GetComponent<EnemyShoot>();
         if (shooter != null)
             shooter.SetTarget(PlayerLocator.Instance.PlayerTransform);
-    }
-
-    public void OnSpawn()
-    {
-
-    }
-
-    public void OnReturn()
-    {
-        SetTarget(null);
-        walkable.Stop();
     }
 }

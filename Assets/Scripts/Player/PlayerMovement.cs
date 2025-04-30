@@ -2,21 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
-    [SerializeField] private float speed = 20f;
-    [SerializeField] private float maxSpeed = 20f;
-
-    [Header("Hover Settings")]
-    [SerializeField] private float hoverMinHeight = 1.5f;
-    [SerializeField] private float hoverForce = 10f;
-
-    [Header("Constraints")]
-    [SerializeField] private float xMin = -150f;
-    [SerializeField] private float xMax = 150f;
-    [SerializeField] private float zMin = -75f;
-    [SerializeField] private float zMax = 75f;
-    [SerializeField] private float yMin = 0f;
-    [SerializeField] private float yMax = 50f;
+    [Header("Configuration")]
+    [SerializeField] private PlayerStats stats;
 
     [Header("Animation")]
     [SerializeField] private Animator animator;
@@ -41,10 +28,10 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 pos = rb.position;
 
-        pos.x = Mathf.Clamp(pos.x, xMin, xMax);
-        pos.y = Mathf.Clamp(pos.y, yMin, yMax);
-        pos.z = Mathf.Clamp(pos.z, zMin, zMax);
-    
+        pos.x = Mathf.Clamp(pos.x, stats.xMin, stats.xMax);
+        pos.y = Mathf.Clamp(pos.y, stats.yMin, stats.yMax);
+        pos.z = Mathf.Clamp(pos.z, stats.zMin, stats.zMax);
+
         rb.position = pos;
     }
 
@@ -91,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (direction != Vector3.zero)
         {
-            rb.AddForce(direction * speed, ForceMode.Acceleration);
+            rb.AddForce(direction * stats.speed, ForceMode.Acceleration);
         }
         else
         {
@@ -100,9 +87,9 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 velocity = rb.velocity;
 
-        if (rb.velocity.magnitude > maxSpeed)
+        if (rb.velocity.magnitude > stats.maxSpeed)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.velocity = rb.velocity.normalized * stats.maxSpeed;
         }
 
         Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
@@ -119,9 +106,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void HoverIfTooLow()
     {
-        if (rb.position.y < hoverMinHeight)
+        if (rb.position.y < stats.hoverMinHeight)
         {
-            rb.AddForce(Vector3.up * hoverForce, ForceMode.Acceleration);
+            rb.AddForce(Vector3.up * stats.hoverForce, ForceMode.Acceleration);
         }
     }
 }

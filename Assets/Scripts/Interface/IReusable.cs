@@ -1,7 +1,7 @@
 
 public interface IReusable
 {
-    void OnSpawn();
+    public void OnSpawn();
 
-    void OnReturn();
+    public void OnReturn();
 }

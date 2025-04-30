@@ -244,10 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 687bf8785776dc349abc39ad4677100b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  damage: 1
-  lifeTime: 3
-  collisionDelay: 0.05
+  stats: {fileID: 11400000, guid: de5b6fc82a55b93469b89086435118bb, type: 2}
   playerLayer:
     serializedVersion: 2
     m_Bits: 256

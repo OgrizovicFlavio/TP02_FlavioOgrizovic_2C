@@ -2,11 +2,10 @@ using UnityEngine;
 using TMPro;
 using System.Collections;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
-    [SerializeField] private int maxLives = 3;
-    [SerializeField] private float invulnerabilityTime = 1f;
-    [SerializeField] private float knockbackForce = 10f;
+    [Header("Stats")]
+    [SerializeField] private PlayerStats stats;
 
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private Renderer playerRenderer;
@@ -26,7 +25,7 @@ public class PlayerHealth : MonoBehaviour
     private void Start()
     {
         isInvulnerable = false;
-        currentLives = maxLives;
+        currentLives = stats.maxLives;
         UpdateUI();
     }
 
@@ -44,7 +43,7 @@ public class PlayerHealth : MonoBehaviour
         if (isInvulnerable) return;
 
         currentLives -= amount;
-        Debug.Log("¡Vida perdida! Vidas restantes: " + currentLives);
+
         UpdateUI();
 
         if (cameraShake != null)
@@ -52,7 +51,7 @@ public class PlayerHealth : MonoBehaviour
             cameraShake.Shake();
         }
 
-        rb.AddForce(knockbackDirection * knockbackForce, ForceMode.Impulse);
+        rb.AddForce(knockbackDirection * stats.knockbackForce, ForceMode.Impulse);
         StartCoroutine(InvulnerabilityCoroutine());
 
         if (currentLives <= 0)
@@ -61,10 +60,10 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount) //IDamageable
     {
         Vector3 noKnockback = Vector3.zero;
-        TakeDamage(amount, noKnockback);
+        TakeDamage((int)amount, noKnockback);
     }
 
     private IEnumerator InvulnerabilityCoroutine()
@@ -75,7 +74,7 @@ public class PlayerHealth : MonoBehaviour
         bool visible = true;
         float blinkInterval = 0.1f;
 
-        while (elapsed < invulnerabilityTime)
+        while (elapsed < stats.invulnerabilityTime)
         {
             visible = !visible;
             if (playerRenderer != null)

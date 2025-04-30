@@ -1,10 +1,9 @@
 using UnityEngine;
 
-public class EnemyDronSpawner : MonoBehaviour
+public class EnemyDroneSpawner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 5f;
-    [SerializeField] private ObjectType enemyType = ObjectType.EnemyDron;
 
     private float timer;
 
@@ -21,11 +20,12 @@ public class EnemyDronSpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        if (spawnPoints.Length == 0) return;
 
-        GameObject enemy = PoolController.Instance.GetObjectFromPool(enemyType);
+        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        Enemy enemy = PoolManager.Instance.Get<Enemy>();
+
         enemy.transform.position = spawnPoint.position;
         enemy.transform.rotation = spawnPoint.rotation;
-        enemy.SetActive(true);
     }
 }

@@ -1,58 +1,20 @@
 using UnityEngine;
 
-public class EnemyBullet : MonoBehaviour
+public class EnemyBullet : Bullet
 {
-    [SerializeField] private float speed = 10f;
-    [SerializeField] private float damage = 1f;
-    [SerializeField] private float lifeTime = 3f;
-    [SerializeField] private float collisionDelay = 0.05f;
+    [Header("Configuration")]
+    [SerializeField] private EnemyBulletStats stats;
     [SerializeField] private LayerMask playerLayer;
 
-    private Rigidbody rb;
-    private Vector3 direction;
     private float timer;
-    private float spawnTime;
-
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
-
-    private void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + direction * speed * Time.fixedDeltaTime);
-    }
 
     private void Update()
     {
         timer += Time.deltaTime;
-        if (timer >= lifeTime)
+        if (timer >= stats.lifeTime)
         {
-            PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.EnemyBullet);
+            OnReturnToPool();
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (Time.time - spawnTime < collisionDelay)
-            return;
-
-        if (Utilities.CheckLayerInMask(playerLayer, other.gameObject.layer))
-        {
-            PlayerHealth player = other.GetComponent<PlayerHealth>();
-            if (player != null)
-            {
-                Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
-                player.TakeDamage((int)damage, knockbackDir);
-            }
-        }
-
-        PoolController.Instance.ReturnObjectToPool(gameObject, ObjectType.EnemyBullet);
-    }
-
-    public void SetDirection(Vector3 dir)
-    {
-        direction = dir.normalized;
     }
 
     public void OnSpawn()
@@ -62,4 +24,45 @@ public class EnemyBullet : MonoBehaviour
     }
 
     public void OnReturn() { }
+
+    protected override float GetSpeed() => stats.speed;
+
+    protected override float GetCollisionDelay() => stats.collisionDelay;
+
+    protected override void HandleCollision(Collider other)
+    {
+        if (Utilities.CheckLayerInMask(playerLayer, other.gameObject.layer))
+        {
+            IDamageable target = other.GetComponent<IDamageable>();
+            if (target != null)
+            {
+                Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
+
+                if (target is PlayerHealth player)
+                {
+                    player.TakeDamage((int)stats.damage, knockbackDir);
+                }
+                else
+                {
+                    target.TakeDamage(stats.damage);
+                }
+            }
+        }
+    }
+
+    public override void OnReturnToPool()
+    {
+        timer = 0f;
+    }
+
+    public override void Disable()
+    {
+        base.Disable();
+    }
+
+    public override void ResetToDefault()
+    {
+        base.ResetToDefault();
+        timer = 0f;
+    }
 }

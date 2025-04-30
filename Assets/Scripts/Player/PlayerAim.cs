@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class PlayerAim : MonoBehaviour
 {
+    [Header("Stats")]
+    [SerializeField] private PlayerStats stats;
+
     [Header("References")]
     [SerializeField] private Camera cam;
     [SerializeField] private Transform firePoint;
@@ -10,7 +13,6 @@ public class PlayerAim : MonoBehaviour
 
     [Header("Laser Sight")]
     [SerializeField] private GameObject laserSightPrefab;
-    [SerializeField] private float range = 100f;
 
     [Header("UI Crosshair")]
     [SerializeField] private Image crosshairImage;
@@ -66,9 +68,9 @@ public class PlayerAim : MonoBehaviour
     private void UpdateLaserPreview()
     {
         Ray ray = new Ray(firePoint.position, cam.transform.forward);
-        Vector3 endPoint = firePoint.position + cam.transform.forward * range;
+        Vector3 endPoint = firePoint.position + cam.transform.forward * stats.laserSightRange;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range))
+        if (Physics.Raycast(ray, out RaycastHit hit, stats.laserSightRange))
         {
             endPoint = hit.point;
         }
@@ -81,7 +83,7 @@ public class PlayerAim : MonoBehaviour
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-        if (Physics.Raycast(ray, out RaycastHit hit, range, destroyableLayerMask))
+        if (Physics.Raycast(ray, out RaycastHit hit, stats.laserSightRange, destroyableLayerMask))
         {
             crosshairImage.color = highlightColor;
         }

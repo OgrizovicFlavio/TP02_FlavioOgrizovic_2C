@@ -244,8 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f606f02342fa7c944baff241f148435b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
-  damage: 25
+  stats: {fileID: 11400000, guid: 7d7312584eaded44ab6e02e0aee79adc, type: 2}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64

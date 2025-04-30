@@ -19,6 +19,7 @@ public class EnemyHealthBar : MonoBehaviour
 
     private void Update()
     {
+        Camera cam = CameraManager.CurrentCamera;
         if (cam != null)
         {
             Vector3 dir = transform.position - cam.transform.position;

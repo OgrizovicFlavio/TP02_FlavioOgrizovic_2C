@@ -1,13 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerRotation : MonoBehaviour
 {
-    [Header("Sensivity Settings")]
-    [SerializeField] private float verticalSensitivity = 2f;
-    [SerializeField] private float horizontalSensitivity = 2f;
-    [SerializeField] private float minVerticalAngle = -80f;
-    [SerializeField] private float maxVerticalAngle = 80f;
+    [Header("Configuration")]
+    [SerializeField] private PlayerStats stats;
 
     [Header("Player Body")]
     [SerializeField] private Transform playerBody;
@@ -28,6 +24,8 @@ public class PlayerRotation : MonoBehaviour
         currentCam = firstPersonCam;
         EnableCamera(firstPersonCam, true);
         EnableCamera(thirdPersonCam, false);
+
+        CameraManager.SetCamera(firstPersonCam.GetComponent<Camera>());
     }
 
     private void Start()
@@ -46,36 +44,35 @@ public class PlayerRotation : MonoBehaviour
             EnableCamera(firstPersonCam, !isThirdPerson);
             EnableCamera(thirdPersonCam, isThirdPerson);
 
-            UpdateAllHealthBarsCamera(currentCam.GetComponent<Camera>());
+            Camera activeCamera = currentCam.GetComponent<Camera>();
+            CameraManager.SetCamera(activeCamera);
+
+            UpdateAllHealthBarsCamera(activeCamera);
 
             PlayerAim aim = FindObjectOfType<PlayerAim>();
             if (aim != null)
-            {
-                aim.SetCamera(currentCam.GetComponent<Camera>());
-            }
+                aim.SetCamera(activeCamera);
 
             PlayerShoot shoot = FindObjectOfType<PlayerShoot>();
             if (shoot != null)
-            {
-                shoot.SetCamera(currentCam.GetComponent<Camera>());
-            }
+                shoot.SetCamera(activeCamera);
         }
     }
 
     private void HandleRotation()
     {
-        float mouseX = Input.GetAxis("Mouse X") * horizontalSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * verticalSensitivity;
+        float mouseX = Input.GetAxis("Mouse X") * stats.horizontalSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * stats.verticalSensitivity;
 
         if (playerBody != null)
-            playerBody.Rotate(Vector3.up * mouseX); // rota el jugador (horizontal)
+            playerBody.Rotate(Vector3.up * mouseX);
 
         verticalRotation -= mouseY;
-        verticalRotation = Mathf.Clamp(verticalRotation, minVerticalAngle, maxVerticalAngle);
+        verticalRotation = Mathf.Clamp(verticalRotation, stats.minVerticalAngle, stats.maxVerticalAngle);
 
         if (currentCam != null)
         {
-            currentCam.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f); // rota la cámara (vertical)
+            currentCam.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
 

@@ -1,25 +1,19 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class EnemyHealth : MonoBehaviour, IReusable
+public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] private float maxHealth = 100f;
+    [Header("Configuration")]
+    [SerializeField] private EnemyStats stats;
     [SerializeField] private EnemyHealthBar enemyHealthBar;
     [SerializeField] private GameObject deathEffect;
 
     private ScoreManager scoreManager;
     private float currentHealth;
 
-    private void Start()
-    {
-        currentHealth = maxHealth;
-        scoreManager = FindObjectOfType<ScoreManager>();
-    }
-
     public void TakeDamage (float amount)
     {
         currentHealth -= amount;
-        enemyHealthBar.UpdateHealthBar(maxHealth, currentHealth);
+        enemyHealthBar.UpdateHealthBar(stats.maxHealth, currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -29,8 +23,8 @@ public class EnemyHealth : MonoBehaviour, IReusable
 
     public void ResetHealth()
     {
-        currentHealth = maxHealth;
-        enemyHealthBar.SetHealthBar(maxHealth, currentHealth);
+        currentHealth = stats.maxHealth;
+        enemyHealthBar.SetHealthBar(stats.maxHealth, currentHealth);
     }
 
     private void Die()
@@ -45,14 +39,19 @@ public class EnemyHealth : MonoBehaviour, IReusable
             scoreManager.AddScore(10);
         }
 
-        GetComponent<Enemy>().ReturnToPool();
+        Entity entity = GetComponent<Entity>();
+        if (entity != null)
+        {
+            entity.Die(); //Función Die() de clase base
+        }
     }
 
-    public void OnSpawn()
+    public void ForceDie()
     {
-        currentHealth = maxHealth;
-        enemyHealthBar.SetHealthBar(maxHealth, currentHealth);
-    }
+        currentHealth = 0;
+        enemyHealthBar.UpdateHealthBar(stats.maxHealth, currentHealth);
 
-    public void OnReturn() { }
+        if (deathEffect != null)
+            Instantiate(deathEffect, transform.position, Quaternion.identity);
+    }
 }

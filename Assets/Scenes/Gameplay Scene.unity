@@ -4138,7 +4138,6 @@ MonoBehaviour:
   - {fileID: 342025343}
   - {fileID: 1580378029}
   spawnInterval: 5
-  npcType: 4
 --- !u!4 &112371737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1707797553568172392, guid: 69b605d6df43d934a8e38adce6ac03d4, type: 3}
@@ -7550,7 +7549,6 @@ MonoBehaviour:
   - {fileID: 1327792471}
   - {fileID: 1160924697}
   spawnInterval: 5
-  npcType: 3
 --- !u!4 &256953688 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1707797553568172392, guid: 69b605d6df43d934a8e38adce6ac03d4, type: 3}
@@ -20692,7 +20690,6 @@ MonoBehaviour:
   - {fileID: 663396564}
   - {fileID: 1411907200}
   spawnInterval: 10
-  enemyType: 2
 --- !u!4 &712092222 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1707797553568172392, guid: 69b605d6df43d934a8e38adce6ac03d4, type: 3}
@@ -38320,13 +38317,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1369012240}
+  - component: {fileID: 1369012246}
   - component: {fileID: 1369012241}
   - component: {fileID: 1369012244}
-  - component: {fileID: 1369012243}
+  - component: {fileID: 1369012245}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -38365,34 +38363,6 @@ MonoBehaviour:
   - {fileID: 3666298956670662723}
   - {fileID: 4639388432173852711}
   crosshair: {fileID: 814810919}
---- !u!114 &1369012243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1369012239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a3509acac247fb4c9bf551f62059a22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poolPrefabs:
-  - prefab: {fileID: 920606491554472274, guid: ab81a0027c95de4479091624535dddfe, type: 3}
-    initialCount: 50
-    objectType: 0
-  - prefab: {fileID: 5452037548991336984, guid: 7796d807d523bb14081b32ee795a8b02, type: 3}
-    initialCount: 10
-    objectType: 2
-  - prefab: {fileID: 8716739270841380983, guid: 3718f01e5c07a2440ac76a92cbe3a34e, type: 3}
-    initialCount: 50
-    objectType: 1
-  - prefab: {fileID: 1913248491722287050, guid: 0ce5843184531654e881343d9f96ebd1, type: 3}
-    initialCount: 20
-    objectType: 4
-  - prefab: {fileID: 4916216550614229293, guid: 598348f6de638144ebc020df78d4197c, type: 3}
-    initialCount: 20
-    objectType: 3
 --- !u!114 &1369012244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38407,6 +38377,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreToWin: 100
   scoreText: {fileID: 831094165}
+--- !u!114 &1369012245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369012239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4187fcdf3698084788fbc688cd940c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 0
+--- !u!114 &1369012246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369012239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0c9437e2b5e0b641a42620ffe99bc6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBulletPrefab: {fileID: 7322963333505801371, guid: ab81a0027c95de4479091624535dddfe, type: 3}
+  enemyBulletPrefab: {fileID: 8815852650907207027, guid: 3718f01e5c07a2440ac76a92cbe3a34e, type: 3}
+  enemyPrefab: {fileID: 6918273098029011504, guid: 7796d807d523bb14081b32ee795a8b02, type: 3}
+  npcCivilianPrefab: {fileID: 8382720627407721465, guid: 0ce5843184531654e881343d9f96ebd1, type: 3}
+  npcAlienPrefab: {fileID: 8384856501415672290, guid: 598348f6de638144ebc020df78d4197c, type: 3}
+  impactEffectPrefab: {fileID: -3424734596756984993, guid: 431e334c69e9d174fb2d6e8e1b8d9ec5, type: 3}
+  bulletsPerType: 30
+  enemyCount: 20
+  npcCount: 20
+  impactEffectCount: 40
 --- !u!4 &1370414281 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7669568855146624608, guid: cbe207438a980ff478716b1f6e978be6, type: 3}
@@ -55785,15 +55790,14 @@ MonoBehaviour:
 
     - Left Click: Shoot
 
-    - Right
-    Click: Change aim
+    - Right Click:
+    Change aim
 
     - Space: Up / Ctrl: Down
 
     - C: Change camera
 
-    -
-    P: Pause'
+    - P: Pause'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -59298,7 +59302,7 @@ PrefabInstance:
       objectReference: {fileID: 1369012241}
     - target: {fileID: 4558439184278867761, guid: 0fe49f3e0ddda864c89adc8b2af7df05, type: 3}
       propertyPath: m_Name
-      value: Player Dron
+      value: Player Drone
       objectReference: {fileID: 0}
     - target: {fileID: 4558439184278867761, guid: 0fe49f3e0ddda864c89adc8b2af7df05, type: 3}
       propertyPath: m_IsActive

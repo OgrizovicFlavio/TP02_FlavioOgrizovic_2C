@@ -4,7 +4,6 @@ public class NPCSapwner : MonoBehaviour
 {
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 4f;
-    [SerializeField] private ObjectType npcType = ObjectType.CivilianNPC;
 
     private float timer;
 
@@ -24,9 +23,9 @@ public class NPCSapwner : MonoBehaviour
         if (spawnPoints.Length == 0) return;
 
         Transform spawn = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        GameObject npc = PoolController.Instance.GetObjectFromPool(npcType);
+        NPCController npc = PoolManager.Instance.Get<NPCController>();
+
         npc.transform.position = spawn.position;
         npc.transform.rotation = spawn.rotation;
-        npc.SetActive(true);
     }
 }

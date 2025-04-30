@@ -25,7 +25,6 @@ public class ScoreManager : MonoBehaviour
         currentScore = Mathf.Clamp(currentScore, 0, scoreToWin);
 
         UpdateUI();
-        Debug.Log("Score: " + currentScore);
 
         if (currentScore >= scoreToWin)
         {

@@ -1,12 +1,10 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class EnemyShoot : MonoBehaviour
 {
+    [Header("Configuration")]
+    [SerializeField] private EnemyStats stats;
     [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 2f;
-    [SerializeField] private float shootingRange = 50f;
-    [SerializeField] private ObjectType bulletType = ObjectType.EnemyBullet;
 
     private float nextFireTime = 0f;
     private Transform player;
@@ -18,9 +16,9 @@ public class EnemyShoot : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= shootingRange && Time.time >= nextFireTime)
+        if (distance <= stats.shootingRange && Time.time >= nextFireTime)
         {
-            nextFireTime = Time.time + fireRate;
+            nextFireTime = Time.time + stats.fireRate;
             Shoot();
         }
     }
@@ -29,16 +27,10 @@ public class EnemyShoot : MonoBehaviour
     {
         Vector3 shootDirection = (player.position - firePoint.position).normalized;
 
-        GameObject bulletGO = PoolController.Instance.GetObjectFromPool(bulletType);
-        bulletGO.transform.position = firePoint.position;
-        bulletGO.transform.rotation = Quaternion.LookRotation(shootDirection);
-        bulletGO.SetActive(true);
-
-        EnemyBullet bullet = bulletGO.GetComponent<EnemyBullet>();
-        if (bullet != null)
-        {
-            bullet.SetDirection(shootDirection);
-        }
+        EnemyBullet bullet = PoolManager.Instance.Get<EnemyBullet>();
+        bullet.transform.position = firePoint.position;
+        bullet.transform.rotation = Quaternion.LookRotation(shootDirection);
+        bullet.SetDirection(shootDirection);
     }
 
     public void SetTarget(Transform target)
