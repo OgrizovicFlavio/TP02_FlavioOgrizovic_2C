@@ -7,10 +7,8 @@ public class PoolManager : MonoBehaviourSingleton<PoolManager>
     private Dictionary<Type, IPooleable> prefabLookup = new();
     private Dictionary<Type, Queue<IPooleable>> pool = new();
 
-    protected override void OnAwaken()
-    {
-        
-    }
+    protected override void OnAwaken() {}
+
     public void InitializePool<T>(T prefab, int minSize = 10) where T : MonoBehaviour, IPooleable
     {
         Type type = typeof(T);
@@ -49,7 +47,7 @@ public class PoolManager : MonoBehaviourSingleton<PoolManager>
             return null;
         }
 
-    (obj as MonoBehaviour).gameObject.SetActive(true);
+        (obj as MonoBehaviour).gameObject.SetActive(true);
         obj.OnGetFromPool();
         return obj as T;
     }
