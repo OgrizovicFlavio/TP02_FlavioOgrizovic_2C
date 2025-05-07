@@ -33,5 +33,6 @@ public class PlayerStats : ScriptableObject
 
     [Header("Shoot")]
     public float fireRate = 0.25f;
+    public float explosiveCooldown = 2f;
     public float laserSightRange = 100f;
 }

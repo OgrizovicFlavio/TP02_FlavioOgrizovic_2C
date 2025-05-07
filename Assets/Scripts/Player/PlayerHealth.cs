@@ -1,9 +1,12 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using System;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
+    public static event Action OnDie;
+
     [Header("Stats")]
     [SerializeField] private PlayerStats stats;
 
@@ -11,7 +14,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [SerializeField] private Renderer playerRenderer;
     [SerializeField] private LayerMask enemyLayerMask;
     [SerializeField] private CameraShake cameraShake;
-    [SerializeField] private PauseManager pauseManager;
 
     private int currentLives;
     private bool isInvulnerable;
@@ -56,7 +58,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         if (currentLives <= 0)
         {
-            pauseManager.GameOver();
+            OnDie?.Invoke();
         }
     }
 

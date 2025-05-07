@@ -5,7 +5,7 @@ public class Walkable : MonoBehaviour
     private const float ForcePower = 10f;
 
     [Header("Configuration")]
-    [SerializeField] private EnemyStats stats;
+    [SerializeField] private EnemyDroneStats stats;
 
     private Rigidbody rb;
     private Vector3 direction;

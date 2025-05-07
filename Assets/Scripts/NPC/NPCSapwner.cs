@@ -23,9 +23,15 @@ public class NPCSapwner : MonoBehaviour
         if (spawnPoints.Length == 0) return;
 
         Transform spawn = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        NPCController npc = PoolManager.Instance.Get<NPCController>();
+        bool spawnCivilian = Random.value < 0.5f;
 
-        npc.transform.position = spawn.position;
-        npc.transform.rotation = spawn.rotation;
+        if (spawnCivilian)
+        {
+            Civilian npc = PoolManager.Instance.Get<Civilian>(spawn.position, spawn.rotation);
+        }
+        else
+        {
+            Alien npc = PoolManager.Instance.Get<Alien>(spawn.position, spawn.rotation);
+        }
     }
 }

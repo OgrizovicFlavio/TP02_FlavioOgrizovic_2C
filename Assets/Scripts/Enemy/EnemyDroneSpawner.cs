@@ -23,9 +23,6 @@ public class EnemyDroneSpawner : MonoBehaviour
         if (spawnPoints.Length == 0) return;
 
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        Enemy enemy = PoolManager.Instance.Get<Enemy>();
-
-        enemy.transform.position = spawnPoint.position;
-        enemy.transform.rotation = spawnPoint.rotation;
+        EnemyDrone enemy = PoolManager.Instance.Get<EnemyDrone>(spawnPoint.position, spawnPoint.rotation);
     }
 }

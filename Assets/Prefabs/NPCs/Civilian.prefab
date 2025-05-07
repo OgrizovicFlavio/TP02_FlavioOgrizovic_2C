@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7247852342735763397}
   - component: {fileID: 7064990505999011346}
   - component: {fileID: 2527407612899159341}
-  - component: {fileID: 8382720627407721465}
+  - component: {fileID: 6346942822572205716}
   m_Layer: 12
   m_Name: Civilian
   m_TagString: Untagged
@@ -85,7 +85,7 @@ CapsuleCollider:
   m_Height: 3.035314
   m_Direction: 1
   m_Center: {x: 0, y: 1.3763013, z: 0}
---- !u!114 &8382720627407721465
+--- !u!114 &6346942822572205716
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,13 +94,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1913248491722287050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a688ebef4f6ceeb4798d936fcc134a74, type: 3}
+  m_Script: {fileID: 11500000, guid: ff9205291b690974e8cc742349fac91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6942459297259802952}
-  moveSpeed: 10
-  wanderRadius: 15
-  idleTime: 2
+  scoreOnDeath: -10
+  stats: {fileID: 11400000, guid: bb717a9e26eb01f4daf90c2093443a80, type: 2}
 --- !u!1001 &3544900646707129561
 PrefabInstance:
   m_ObjectHideFlags: 0

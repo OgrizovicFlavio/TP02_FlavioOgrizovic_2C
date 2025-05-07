@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PauseManager : MonoBehaviour
+public class PauseManager : MonoBehaviourSingleton<PauseManager>
 {
+    public static event Action<bool> OnPause;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject winMenu;
@@ -12,6 +14,11 @@ public class PauseManager : MonoBehaviour
     private bool isPaused = false;
     private bool isGameEnded = false;
 
+    protected override void OnAwaken()
+    {
+        PlayerHealth.OnDie += PlayerHealth_OnDie;
+    }
+
     private void Start()
     {
         Time.timeScale = 1;
@@ -19,18 +26,45 @@ public class PauseManager : MonoBehaviour
         if (crosshair != null) crosshair.SetActive(true);
     }
 
+    private void OnDestroy()
+    {
+        PlayerHealth.OnDie -= PlayerHealth_OnDie;
+    }
+
     private void Update()
     {
         if (isGameEnded) 
             return;
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !isGameEnded)
         {
             if (!isPaused)
                 PauseGame();
             else
                 ResumeGame();
+
+            OnPause?.Invoke(isPaused);
         }
+    }
+
+    private void PlayerHealth_OnDie()
+    {
+        GameOver();
+    }
+
+    private void EnableComponents()
+    {
+        foreach (var comp in componentsToDisable)
+        {
+            if (comp != null)
+                comp.enabled = true;
+        }
+
+        if (crosshair != null)
+            crosshair.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void DisableComponents()
@@ -55,6 +89,11 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
 
         DisableComponents();
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        OnPause?.Invoke(isPaused);
     }
 
     public void ResumeGame()
@@ -63,17 +102,12 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1;
         isPaused = false;
 
-        foreach (var component in componentsToDisable)
-        {
-            if (component != null)
-                component.enabled = true;
-        }
-
-        if (crosshair != null)
-            crosshair.SetActive(true);
+        EnableComponents();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        OnPause?.Invoke(isPaused);
     }
 
     public void GameOver()
@@ -82,10 +116,9 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 0;
         isGameEnded = true;
         DisableComponents();
-
     }
 
-    public void Win()
+    public void WinGame()
     {
         winMenu.SetActive(true);
         Time.timeScale = 0;
@@ -96,6 +129,15 @@ public class PauseManager : MonoBehaviour
     public void RetryGame()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        PoolManager.Instance.ReturnAllActiveObjects();
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (CustomSceneManager.Instance != null)
+        {
+            CustomSceneManager.Instance.ReloadSceneImmediately();
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

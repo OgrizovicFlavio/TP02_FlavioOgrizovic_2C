@@ -8,12 +8,10 @@ public abstract class Entity : MonoBehaviour, IPooleable
     [SerializeField] protected int scoreOnDeath = 0;
 
     protected bool isDead = false;
-    protected ScoreManager scoreManager;
 
     public virtual void OnSpawn()
     {
         isDead = false;
-        scoreManager = FindObjectOfType<ScoreManager>();
         EnableCollider(true);
     }
 
@@ -39,8 +37,8 @@ public abstract class Entity : MonoBehaviour, IPooleable
 
     protected virtual void AddScore()
     {
-        if (scoreManager != null)
-            scoreManager.AddScore(scoreOnDeath);
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.AddScore(scoreOnDeath);
     }
 
     protected virtual void HandleReturn()
@@ -64,7 +62,6 @@ public abstract class Entity : MonoBehaviour, IPooleable
     public virtual void OnGetFromPool()
     {
         isDead = false;
-        scoreManager = FindObjectOfType<ScoreManager>();
         EnableCollider(true);
     }
 
@@ -82,7 +79,6 @@ public abstract class Entity : MonoBehaviour, IPooleable
     public virtual void ResetToDefault()
     {
         isDead = false;
-        scoreManager = null;
         EnableCollider(false);
     }
 }

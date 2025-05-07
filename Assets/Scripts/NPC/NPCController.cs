@@ -2,11 +2,8 @@ using UnityEngine;
 
 public class NPCController : Entity, IDamageable
 {
-    [Header("NPC Settings")]
-    [SerializeField] private NPCType npcType = NPCType.Civilian;
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float wanderRadius = 15f;
-    [SerializeField] private float idleTime = 2f;
+    [Header("Configuration")]
+    [SerializeField] private NPCStats stats;
 
     private Vector3 targetPosition;
     private float idleTimer;
@@ -37,7 +34,7 @@ public class NPCController : Entity, IDamageable
     private void MoveTowardsTarget()
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * stats.moveSpeed * Time.deltaTime;
         transform.forward = direction;
 
         SetState(NPCState.Running);
@@ -45,14 +42,14 @@ public class NPCController : Entity, IDamageable
         if (Vector3.Distance(transform.position, targetPosition) < 0.5f)
         {
             isMoving = false;
-            idleTimer = idleTime;
+            idleTimer = stats.idleTime;
             SetState(NPCState.Idle);
         }
     }
 
     private void PickNewDestination()
     {
-        Vector2 offset = Random.insideUnitCircle * wanderRadius;
+        Vector2 offset = Random.insideUnitCircle * stats.wanderRadius;
         targetPosition = transform.position + new Vector3(offset.x, 0, offset.y);
         isMoving = true;
     }
@@ -73,16 +70,6 @@ public class NPCController : Entity, IDamageable
         if (isDead) return;
 
         SetState(NPCState.Dying);
-
-        if (npcType == NPCType.Alien)
-        {
-            scoreOnDeath = 5;
-        }
-        else
-        {
-            scoreOnDeath = -10;
-        }
-
         base.Die();
     }
 

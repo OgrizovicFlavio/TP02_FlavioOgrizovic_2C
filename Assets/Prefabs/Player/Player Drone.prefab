@@ -264,7 +264,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -8896051167825165466, guid: cf4543186e6328742b996d4973a351f4, type: 3}
-  - {fileID: 2100000, guid: 810902d73a6c8514ebbd9c09672db500, type: 2}
+  - {fileID: 2100000, guid: 6660f92f159862645a6d0b4e6e35edfb, type: 2}
   - {fileID: -4660651839558579860, guid: cf4543186e6328742b996d4973a351f4, type: 3}
   - {fileID: -6867524174320841699, guid: cf4543186e6328742b996d4973a351f4, type: 3}
   m_StaticBatchInfo:
@@ -10107,7 +10107,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   cameraShake: {fileID: 8482766094430070579}
-  pauseManager: {fileID: 0}
 --- !u!114 &8266181240473766436
 MonoBehaviour:
   m_ObjectHideFlags: 0

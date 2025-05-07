@@ -8,10 +8,11 @@ public class PlayerShoot : MonoBehaviour
     [Header("References")]
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask destroyableLayer;
-    [SerializeField] private PlayerBullet bulletPrefab;
+    [SerializeField] private PlayerLaserBullet bulletPrefab;
     [SerializeField] private Transform firePoint;
 
     private float nextFireTime = 0f;
+    private float nextExplosiveTime = 0f;
 
     private void Awake()
     {
@@ -23,19 +24,34 @@ public class PlayerShoot : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime)
         {
+            ShootLaser();
             nextFireTime = Time.time + stats.fireRate;
-            Shoot();
+        }
+
+        if (Time.time >= nextExplosiveTime && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            ShootExplosive();
+            nextExplosiveTime = Time.time + stats.explosiveCooldown;
         }
     }
 
-    private void Shoot()
+    private void ShootLaser()
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         Vector3 direction = ray.direction;
 
-        PlayerBullet bullet = PoolManager.Instance.Get<PlayerBullet>();
-        bullet.transform.position = firePoint.position;
-        bullet.transform.rotation = Quaternion.LookRotation(direction);
+        PlayerLaserBullet bullet = PoolManager.Instance.Get<PlayerLaserBullet>(firePoint.position, Quaternion.LookRotation(direction));
+
+        bullet.SetDirection(direction);
+    }
+
+    private void ShootExplosive()
+    {
+        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Vector3 direction = ray.direction;
+
+        PlayerExplosiveBullet bullet = PoolManager.Instance.Get<PlayerExplosiveBullet>(firePoint.position, Quaternion.LookRotation(direction));
+
         bullet.SetDirection(direction);
     }
 
