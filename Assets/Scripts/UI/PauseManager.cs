@@ -5,11 +5,16 @@ using UnityEngine.SceneManagement;
 public class PauseManager : MonoBehaviourSingleton<PauseManager>
 {
     public static event Action<bool> OnPause;
+
+    [Header("UI")]
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
     [SerializeField] private GameObject winMenu;
     [SerializeField] private MonoBehaviour[] componentsToDisable;
     [SerializeField] private GameObject crosshair;
+
+    [Header("Level 2")]
+    [SerializeField] private LevelStats level2Stats;
 
     private bool isPaused = false;
     private bool isGameEnded = false;
@@ -36,7 +41,7 @@ public class PauseManager : MonoBehaviourSingleton<PauseManager>
         if (isGameEnded) 
             return;
 
-        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !isGameEnded)
+        if (Input.GetKeyDown(KeyCode.P) && !isGameEnded)
         {
             if (!isPaused)
                 PauseGame();
@@ -110,6 +115,18 @@ public class PauseManager : MonoBehaviourSingleton<PauseManager>
         OnPause?.Invoke(isPaused);
     }
 
+    public void GoToNextLevel()
+    {
+        Time.timeScale = 1;
+
+        if (level2Stats != null)
+            LevelManager.Instance.SetLevel(level2Stats);
+
+        PoolManager.Instance?.ReturnAllActiveObjects();
+
+        CustomSceneManager.Instance.ChangeSceneTo("Level 2 Scene");
+    }
+
     public void GameOver()
     {
         gameOverMenu.SetActive(true);
@@ -129,7 +146,12 @@ public class PauseManager : MonoBehaviourSingleton<PauseManager>
     public void RetryGame()
     {
         Time.timeScale = 1;
-        PoolManager.Instance.ReturnAllActiveObjects();
+
+        if (PoolManager.Instance != null)
+            PoolManager.Instance.ReturnAllActiveObjects();
+
+        CoinManager.Instance?.ResetCoins();
+
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (CustomSceneManager.Instance != null)
         {

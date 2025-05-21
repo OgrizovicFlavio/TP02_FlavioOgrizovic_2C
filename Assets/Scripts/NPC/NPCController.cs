@@ -2,12 +2,21 @@ using UnityEngine;
 
 public class NPCController : Entity, IDamageable
 {
+    public static event System.Action OnNPCDestroyed;
+
     [Header("Configuration")]
-    [SerializeField] private NPCStats stats;
+    [SerializeField] protected NPCStats stats;
 
     private Vector3 targetPosition;
     private float idleTimer;
     private bool isMoving = false;
+
+    private Rigidbody rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void Start()
     {
@@ -34,7 +43,9 @@ public class NPCController : Entity, IDamageable
     private void MoveTowardsTarget()
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * stats.moveSpeed * Time.deltaTime;
+        Vector3 nextPosition = transform.position + direction * stats.moveSpeed * Time.deltaTime;
+
+        rb.MovePosition(nextPosition);
         transform.forward = direction;
 
         SetState(NPCState.Running);
@@ -69,9 +80,13 @@ public class NPCController : Entity, IDamageable
     {
         if (isDead) return;
 
+        OnNPCDestroyed?.Invoke();
+        DropCoin();
         SetState(NPCState.Dying);
         base.Die();
     }
+
+    protected virtual void DropCoin() { }
 
     public override void OnSpawn()
     {

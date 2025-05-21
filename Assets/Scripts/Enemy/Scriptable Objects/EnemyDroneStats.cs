@@ -17,4 +17,7 @@ public class EnemyDroneStats : ScriptableObject
     [Header("Navigation")]
     public float stoppingDistance = 1.5f;
     public float rotationSpeed = 5f;
+
+    [Header("Death")]
+    public int killValue = 1;
 }

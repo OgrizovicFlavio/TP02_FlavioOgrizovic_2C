@@ -3,9 +3,10 @@ using System.Collections;
 
 public abstract class Entity : MonoBehaviour, IPooleable
 {
+    public static event System.Action<Entity> OnAnyEntityDestroyed;
+
     [Header("General")]
     [SerializeField] protected Animator animator;
-    [SerializeField] protected int scoreOnDeath = 0;
 
     protected bool isDead = false;
 
@@ -32,14 +33,12 @@ public abstract class Entity : MonoBehaviour, IPooleable
 
         AddScore();
 
+        OnAnyEntityDestroyed?.Invoke(this);
+
         HandleReturn();
     }
 
-    protected virtual void AddScore()
-    {
-        if (ScoreManager.Instance != null)
-            ScoreManager.Instance.AddScore(scoreOnDeath);
-    }
+    protected virtual void AddScore() { }
 
     protected virtual void HandleReturn()
     {

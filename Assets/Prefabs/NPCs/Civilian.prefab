@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6942459297259802952}
-  scoreOnDeath: -10
+  killValue: -1
   stats: {fileID: 11400000, guid: bb717a9e26eb01f4daf90c2093443a80, type: 2}
 --- !u!1001 &3544900646707129561
 PrefabInstance:

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviourSingleton<GameManager>
+{   
     [Header("Pool Prefabs")]
     [SerializeField] private PlayerLaserBullet playerBulletPrefab;
     [SerializeField] private EnemyDroneBullet enemyBulletPrefab;
@@ -11,23 +11,34 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Alien npcAlienPrefab;
     [SerializeField] private LaserImpactEffect laserImpactEffectPrefab;
     [SerializeField] private ExplosiveImpactEffect explosiveImpactEffectPrefab;
-
-    [Header("Pool Settings")]
-    [SerializeField] private int bulletsPerType = 30;
-    [SerializeField] private int enemyCount = 20;
-    [SerializeField] private int npcCount = 20;
-    [SerializeField] private int impactEffectCount = 40;
+    [SerializeField] private Coin coinPrefab;
 
     private void Start()
     {
-        PoolManager.Instance.InitializePool(enemyPrefab, enemyCount);
-        PoolManager.Instance.InitializePool(enemyBulletPrefab, bulletsPerType);
-        PoolManager.Instance.InitializePool(playerBulletPrefab, bulletsPerType);
-        PoolManager.Instance.InitializePool(playerExplosiveBulletPrefab, bulletsPerType);
-        PoolManager.Instance.InitializePool(laserImpactEffectPrefab, impactEffectCount);
-        PoolManager.Instance.InitializePool(explosiveImpactEffectPrefab, impactEffectCount);
-        PoolManager.Instance.InitializePool(explosiveImpactEffectPrefab, impactEffectCount);
-        PoolManager.Instance.InitializePool<Civilian>(npcCivilianPrefab, npcCount);
-        PoolManager.Instance.InitializePool<Alien>(npcAlienPrefab, npcCount);
+        PoolManager.Instance.ReturnAllActiveObjects();
+        LevelTimerManager.Instance?.StartTimer();
+
+        var stats = LevelManager.Instance.Current;
+
+        PoolManager.Instance.InitializePool(enemyPrefab, stats.enemyPoolSize);
+        PoolManager.Instance.InitializePool(enemyBulletPrefab, stats.bulletsPullSize);
+        PoolManager.Instance.InitializePool(playerBulletPrefab, stats.bulletsPullSize);
+        PoolManager.Instance.InitializePool(playerExplosiveBulletPrefab, stats.bulletsPullSize);
+        PoolManager.Instance.InitializePool(laserImpactEffectPrefab, stats.impactEffectPoolSize);
+        PoolManager.Instance.InitializePool(explosiveImpactEffectPrefab, stats.impactEffectPoolSize);
+        PoolManager.Instance.InitializePool<Civilian>(npcCivilianPrefab, stats.npcPoolSize);
+        PoolManager.Instance.InitializePool<Alien>(npcAlienPrefab, stats.npcPoolSize);
+        PoolManager.Instance.InitializePool(coinPrefab, 20);
+    }
+
+    protected override void OnAwaken() { }
+
+    public void ResetGame()
+    {
+        CoinManager.Instance?.ResetCoins();
+        EnemyKillManager.Instance?.ResetKills();
+        LevelTimerManager.Instance?.ResetTimer();
+
+        PoolManager.Instance?.ReturnAllActiveObjects();
     }
 }

@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class EnemyDrone : Entity, IDamageable
 {
+    public static event System.Action OnEnemyDestroyed;
+
+    [SerializeField] private EnemyDroneStats stats;
     [SerializeField] private EnemyDroneHealth health;
 
     public void TakeDamage(float amount)
@@ -13,8 +16,22 @@ public class EnemyDrone : Entity, IDamageable
     {
         if (isDead) return;
 
+        OnEnemyDestroyed?.Invoke();
+        DropCoin();
+
         health.ForceDie();
         base.Die();
+    }
+
+    private void DropCoin()
+    {
+        PoolManager.Instance.Get<Coin>(transform.position, Quaternion.identity);
+    }
+
+    protected override void AddScore()
+    {
+        if (EnemyKillManager.Instance != null)
+            EnemyKillManager.Instance.RegisterKill(stats.killValue);
     }
 
     protected override void HandleReturn()

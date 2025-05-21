@@ -47,7 +47,15 @@ public class PoolManager : MonoBehaviourSingleton<PoolManager>
             return null;
         }
 
-        var go = (obj as MonoBehaviour).gameObject;
+        var monobehaviour = obj as MonoBehaviour;
+
+        if (monobehaviour == null || monobehaviour.gameObject == null)
+        {
+            Debug.LogWarning($"[PoolManager] Tried to use a pooled object of type {typeof(T).Name}, but it was destroyed.");
+            return null;
+        }
+
+        var go = monobehaviour.gameObject;
         go.transform.position = position;
         go.transform.rotation = rotation;
         go.SetActive(true);
@@ -78,18 +86,18 @@ public class PoolManager : MonoBehaviourSingleton<PoolManager>
         for (int i = activeObjects.Count - 1; i >= 0; i--)
         {
             var obj = activeObjects[i];
-            if (obj != null)
-            {
-                obj.OnReturnToPool();
-                obj.Disable();
-                (obj as MonoBehaviour).gameObject.SetActive(false);
+            if (obj == null || (obj as MonoBehaviour) == null)
+                continue;
 
-                Type type = obj.GetType();
-                if (!pool.ContainsKey(type))
-                    pool[type] = new Queue<IPooleable>();
+            obj.OnReturnToPool();
+            obj.Disable();
+            (obj as MonoBehaviour).gameObject.SetActive(false);
 
-                pool[type].Enqueue(obj);
-            }
+            Type type = obj.GetType();
+            if (!pool.ContainsKey(type))
+                pool[type] = new Queue<IPooleable>();
+
+            pool[type].Enqueue(obj);
         }
 
         activeObjects.Clear();

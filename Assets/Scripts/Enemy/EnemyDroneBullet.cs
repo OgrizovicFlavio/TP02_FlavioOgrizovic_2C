@@ -13,17 +13,9 @@ public class EnemyDroneBullet : Bullet
         timer += Time.deltaTime;
         if (timer >= stats.lifeTime)
         {
-            OnReturnToPool();
+            PoolManager.Instance.ReturnToPool(this);
         }
     }
-
-    public void OnSpawn()
-    {
-        timer = 0f;
-        spawnTime = Time.time;
-    }
-
-    public void OnReturn() { }
 
     protected override float GetSpeed() => stats.speed;
 
@@ -39,25 +31,24 @@ public class EnemyDroneBullet : Bullet
                 Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
 
                 if (target is PlayerHealth player)
-                {
-                    player.TakeDamage((int)stats.damage, knockbackDir);
-                }
+                    player.TakeDamage(stats.damage, knockbackDir);
                 else
-                {
                     target.TakeDamage(stats.damage);
-                }
             }
         }
+
+        PoolManager.Instance.ReturnToPool(this);
+    }
+
+    public override void OnGetFromPool()
+    {
+        base.OnGetFromPool();
+        timer = 0f;
     }
 
     public override void OnReturnToPool()
     {
         timer = 0f;
-    }
-
-    public override void Disable()
-    {
-        base.Disable();
     }
 
     public override void ResetToDefault()

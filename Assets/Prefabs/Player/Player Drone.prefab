@@ -9980,12 +9980,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6756596616131009275}
+  - component: {fileID: 2657643859016730819}
   - component: {fileID: 2508829680054449249}
   - component: {fileID: 5091083366256704756}
-  - component: {fileID: 2657643859016730819}
   - component: {fileID: 3684733934729445809}
   - component: {fileID: 2153766905299538489}
   - component: {fileID: 8266181240473766436}
+  - component: {fileID: 1563834667226509921}
   - component: {fileID: 5129752090042795613}
   - component: {fileID: 2427190049925287046}
   m_Layer: 8
@@ -10014,6 +10015,22 @@ Transform:
   - {fileID: 6082145202108819863}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2657643859016730819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558439184278867761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb48dcee42faba442a75cea98822a457, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
+  playerBody: {fileID: 6756596616131009275}
+  firstPersonCam: {fileID: 4973013521145156574}
+  thirdPersonCam: {fileID: 6082145202108819863}
 --- !u!114 &2508829680054449249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10055,22 +10072,6 @@ MonoBehaviour:
   crosshairImage: {fileID: 0}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   highlightColor: {r: 1, g: 0, b: 0, a: 1}
---- !u!114 &2657643859016730819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4558439184278867761}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb48dcee42faba442a75cea98822a457, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
-  playerBody: {fileID: 6756596616131009275}
-  firstPersonCam: {fileID: 4973013521145156574}
-  thirdPersonCam: {fileID: 6082145202108819863}
 --- !u!114 &3684733934729445809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10101,12 +10102,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: a965022751791e9459a2ff3f86d08d81, type: 2}
-  livesText: {fileID: 0}
   playerRenderer: {fileID: 5591998828885006231}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  worldLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   cameraShake: {fileID: 8482766094430070579}
+  healthBar: {fileID: 0}
 --- !u!114 &8266181240473766436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10119,6 +10123,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18509dc0635b4e64f89294a3b1537b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1563834667226509921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4558439184278867761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d07b9ca262e1754a90641b90c3e2fbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coinLayer:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!54 &5129752090042795613
 Rigidbody:
   m_ObjectHideFlags: 0

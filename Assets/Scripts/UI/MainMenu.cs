@@ -2,9 +2,16 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private LevelStats level1Stats;
+
     public void PlayGame()
     {
-        CustomSceneManager.Instance.ChangeSceneTo("Gameplay Scene");
+        Time.timeScale = 1;
+
+        LevelManager.Instance.SetLevel(level1Stats);
+
+        PoolManager.Instance?.ReturnAllActiveObjects();
+        CustomSceneManager.Instance.ChangeSceneTo("Level 1 Scene");
     }
 
     public void QuitGame()

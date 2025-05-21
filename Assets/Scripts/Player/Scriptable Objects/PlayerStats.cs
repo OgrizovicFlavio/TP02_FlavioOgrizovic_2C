@@ -12,14 +12,6 @@ public class PlayerStats : ScriptableObject
     public float hoverMinHeight = 1.5f;
     public float hoverForce = 10f;
 
-    [Header("Limits")]
-    public float xMin = -150f;
-    public float xMax = 150f;
-    public float yMin = 0f;
-    public float yMax = 50f;
-    public float zMin = -75f;
-    public float zMax = 75f;
-
     [Header("Rotation")]
     public float verticalSensitivity = 2f;
     public float horizontalSensitivity = 2f;
@@ -27,7 +19,7 @@ public class PlayerStats : ScriptableObject
     public float maxVerticalAngle = 80f;
 
     [Header("Health")]
-    public int maxLives = 3;
+    public float maxHealth = 100;
     public float invulnerabilityTime = 1f;
     public float knockbackForce = 10f;
 

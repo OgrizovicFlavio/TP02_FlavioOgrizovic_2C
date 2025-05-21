@@ -7,20 +7,25 @@ public class ImpactEffect : MonoBehaviour, IPooleable
     private void Awake()
     {
         impactEffect = GetComponent<ParticleSystem>();
+        if (impactEffect != null)
+        {
+            var main = impactEffect.main;
+            main.stopAction = ParticleSystemStopAction.Callback;
+        }
     }
 
-    private void Update()
+    private void OnParticleSystemStopped()
     {
-        if (impactEffect != null && !impactEffect.IsAlive())
-        {
-            PoolManager.Instance.ReturnToPool(this);
-        }
+        PoolManager.Instance.ReturnToPool(this);
     }
 
     public void OnGetFromPool()
     {
         if (impactEffect != null)
+        {
+            impactEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             impactEffect.Play();
+        }
     }
 
     public void OnReturnToPool()
@@ -35,5 +40,5 @@ public class ImpactEffect : MonoBehaviour, IPooleable
             impactEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
     }
 
-    public void ResetToDefault() {}
+    public void ResetToDefault() { }
 }

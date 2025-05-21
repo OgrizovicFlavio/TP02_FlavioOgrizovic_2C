@@ -1,7 +1,7 @@
 using UnityEngine;
-using TMPro;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
@@ -10,12 +10,14 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     [Header("Stats")]
     [SerializeField] private PlayerStats stats;
 
-    [SerializeField] private TextMeshProUGUI livesText;
+    [Header("References")]
     [SerializeField] private Renderer playerRenderer;
     [SerializeField] private LayerMask enemyLayerMask;
+    [SerializeField] private LayerMask worldLayerMask;
     [SerializeField] private CameraShake cameraShake;
+    [SerializeField] private Image healthBar;
 
-    private int currentLives;
+    private float currentHealth;
     private bool isInvulnerable;
     private Rigidbody rb;
 
@@ -27,8 +29,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void Start()
     {
         isInvulnerable = false;
-        currentLives = stats.maxLives;
-        UpdateUI();
+        currentHealth = stats.maxHealth;
+        UpdateHealthBar();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,17 +38,29 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (Utilities.CheckLayerInMask(enemyLayerMask, other.gameObject.layer))
         {
             Vector3 knockbackDir = (transform.position - other.transform.position).normalized;
-            TakeDamage(1, knockbackDir);
+            float damage = LevelManager.Instance.Current.playerCollisionDamage;
+            TakeDamage(damage, knockbackDir * 2);
         }
     }
 
-    public void TakeDamage(int amount, Vector3 knockbackDirection)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (Utilities.CheckLayerInMask(worldLayerMask, collision.gameObject.layer))
+        {
+            Vector3 knockbackDir = (transform.position - collision.transform.position).normalized;
+            float damage = LevelManager.Instance.Current.playerCollisionDamage;
+            TakeDamage(damage, knockbackDir);
+        }
+    }
+
+    public void TakeDamage(float amount, Vector3 knockbackDirection)
     {
         if (isInvulnerable) return;
 
-        currentLives -= amount;
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, stats.maxHealth);
 
-        UpdateUI();
+        UpdateHealthBar();
 
         if (cameraShake != null)
         {
@@ -56,7 +70,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         rb.AddForce(knockbackDirection * stats.knockbackForce, ForceMode.Impulse);
         StartCoroutine(InvulnerabilityCoroutine());
 
-        if (currentLives <= 0)
+        if (currentHealth <= 0)
         {
             OnDie?.Invoke();
         }
@@ -65,7 +79,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float amount) //IDamageable
     {
         Vector3 noKnockback = Vector3.zero;
-        TakeDamage((int)amount, noKnockback);
+        TakeDamage(amount, noKnockback);
     }
 
     private IEnumerator InvulnerabilityCoroutine()
@@ -92,11 +106,12 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         isInvulnerable = false;
     }
 
-    private void UpdateUI()
+    private void UpdateHealthBar()
     {
-        if (livesText != null)
+        if (healthBar != null)
         {
-            livesText.text = "LIVES: " + currentLives;
+            float fill = (float)currentHealth / stats.maxHealth;
+            healthBar.fillAmount = fill;
         }
     }
 }

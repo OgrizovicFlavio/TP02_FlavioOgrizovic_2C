@@ -28,9 +28,9 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 pos = rb.position;
 
-        pos.x = Mathf.Clamp(pos.x, stats.xMin, stats.xMax);
-        pos.y = Mathf.Clamp(pos.y, stats.yMin, stats.yMax);
-        pos.z = Mathf.Clamp(pos.z, stats.zMin, stats.zMax);
+        pos.x = Mathf.Clamp(pos.x, LevelManager.Instance.Current.xMin, LevelManager.Instance.Current.xMax);
+        pos.y = Mathf.Clamp(pos.y, LevelManager.Instance.Current.yMin, LevelManager.Instance.Current.yMax);
+        pos.z = Mathf.Clamp(pos.z, LevelManager.Instance.Current.zMin, LevelManager.Instance.Current.zMax);
 
         rb.position = pos;
     }

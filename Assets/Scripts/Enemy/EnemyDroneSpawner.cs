@@ -1,28 +1,24 @@
 using UnityEngine;
 
-public class EnemyDroneSpawner : MonoBehaviour
+public class EnemyDroneSpawner : Spawner<EnemyDrone>
 {
-    [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private float spawnInterval = 5f;
-
-    private float timer;
-
-    private void Update()
+    protected override void SpawnEntityAt(Vector3 position, Quaternion rotation)
     {
-        timer += Time.deltaTime;
-
-        if (timer >= spawnInterval)
-        {
-            SpawnEnemy();
-            timer = 0f;
-        }
+        PoolManager.Instance.Get<EnemyDrone>(position, rotation);
     }
 
-    private void SpawnEnemy()
+    protected override float GetSpawnIntervalFromLevelStats()
     {
-        if (spawnPoints.Length == 0) return;
+        return LevelManager.Instance.Current.enemySpawnInterval;
+    }
 
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        EnemyDrone enemy = PoolManager.Instance.Get<EnemyDrone>(spawnPoint.position, spawnPoint.rotation);
+    protected override int GetSpawnLimitFromLevelStats()
+    {
+        return LevelManager.Instance.Current.enemiesToDestroy;
+    }
+
+    protected override int GetInitialSpawnCountFromLevelStats()
+    {
+        return LevelManager.Instance.Current.initialEnemySpawnCount;
     }
 }

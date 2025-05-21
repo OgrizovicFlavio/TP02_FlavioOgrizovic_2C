@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  scoreOnDeath: 10
+  stats: {fileID: 11400000, guid: aff401548617c4b42bd97e260042a920, type: 2}
   health: {fileID: 8264619150427748256}
 --- !u!114 &3145651072174114161
 MonoBehaviour:

@@ -16,3 +16,4 @@ MonoBehaviour:
   moveSpeed: 15
   wanderRadius: 10
   idleTime: 2
+  killValue: 1
